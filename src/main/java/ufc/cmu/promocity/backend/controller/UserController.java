@@ -2,8 +2,6 @@ package ufc.cmu.promocity.backend.controller;
 
 import ufc.cmu.promocity.backend.model.User;
 import ufc.cmu.promocity.backend.service.UserService;
-import ufc.cmu.promocity.backend.service.interfaces.IUserService;
-
 import java.net.URI;
 import java.util.List;
 

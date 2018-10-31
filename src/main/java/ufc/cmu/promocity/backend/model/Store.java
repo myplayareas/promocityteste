@@ -1,5 +1,6 @@
 package ufc.cmu.promocity.backend.model;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,5 +75,20 @@ public class Store {
 	public void addPromotion(Promotion promotion) {
 		this.PromotionList.add(promotion);		
 	}
-
+	
+	/**
+	 * Percorre a lista de promocoes até encontrar a promocao com idPromocao
+	 * @param idPromocao promocao pesquisada
+	 * @return promocao encontrada
+	 */
+	public Promotion getPromotionFromPromotionList(Long idPromotion) {
+		for (Iterator<Promotion> iterator = this.getPromotionList().iterator(); iterator.hasNext();) {
+			Promotion promotion = (Promotion)iterator.next();
+			if (promotion.getId()==idPromotion) {
+				return promotion;
+			}
+		}
+		return null;
+	}
+	
 }

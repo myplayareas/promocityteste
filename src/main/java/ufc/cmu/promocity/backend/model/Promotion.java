@@ -1,5 +1,6 @@
 package ufc.cmu.promocity.backend.model;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,4 +42,20 @@ public class Promotion {
 	public void addCoupon(Coupon coupon) {
 		this.CouponList.add(coupon);
 	}
+
+	/**
+	 * Percorre a lista de cupons até encontrar o cupom do idCoupon
+	 * @param idCoupon do cupom pesquisado
+	 * @return Coupon encontrado
+	 */
+	public Coupon getCouponFromCouponList(Long idCoupon) {
+		for (Iterator<Coupon> iterator = this.getCouponList().iterator(); iterator.hasNext();) {
+			Coupon coupon = (Coupon) iterator.next();
+			if (coupon.getId() == idCoupon) {
+				return coupon;
+			}
+		}
+		return null;
+	}
+			
 }

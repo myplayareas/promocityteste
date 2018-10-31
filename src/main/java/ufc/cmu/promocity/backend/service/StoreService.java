@@ -88,15 +88,75 @@ public class StoreService implements IStoreService{
 	 * @param list
 	 */
 	public void addPromotion(Long idStore, Promotion promotion) {
+		//find the store with idStore
 		Store storeAux = this.stores.get(idStore);
+		
+		//Add promotion in store found
 		storeAux.addPromotion(promotion);
+		
+		//update list of store with new store
 		this.updateStore(idStore, storeAux);
+	}
+	
+	/**
+	 * Add a Coupon in Promotion from Store
+	 * @param idStore
+	 * @param idPromotion
+	 * @param coupon
+	 */
+	public void addCoupon(Long idStore, Long idPromotion, Coupon coupon) {
+		//find a store with idStore in list of stores
+		Store storeAux = this.stores.get(idStore);
+		
+		//find a promotion with idPromotion in a specifc store
+		Promotion promotionAux = storeAux.getPromotionFromPromotionList(idPromotion);
+		
+		//add coupon in promotion with idPromotion
+		promotionAux.addCoupon(coupon);
+		//TODO : FAZER A ATUALIZAÇÃO DA PROMOCAO NA LOJA ESPECIFICA
+	}
+	
+	/**
+	 * Retund all promotion from specifc store
+	 * @param idStore
+	 * @return list of promotion from specif store
+	 */
+	public List<Promotion> getAllPromotionOneStore(Long idStore){
+		//find a store with idStore in list of stores
+		Store storeAux = this.stores.get(idStore);
+		
+		return storeAux.getPromotionList();
+	}
+	
+	
+	public Promotion getPromotionFromStore(Long idStore, Long idPromotion) {
+		//find a store with idStore in list of stores
+		Store storeAux = this.stores.get(idStore);
+				
+		return storeAux.getPromotionFromPromotionList(idPromotion);
+	}
+	
+	public List<Coupon> getAllCouponsFromPromotionAndStore(long idStore, long idPromotion) {
+		//find a store with idStore in list of stores
+		Store storeAux = this.stores.get(idStore);
+		
+		return storeAux.getPromotionFromPromotionList(idPromotion).getCouponList();
+	}
+	
+	public Coupon getCouponFromPromotionAndStore(long idStore, long idPromotion, long idCoupon) {
+		//find a store with idStore in list of stores
+		Store storeAux = this.stores.get(idStore);
+		
+		//Find a promotion in a list of promotions
+		Promotion promotionAux = storeAux.getPromotionFromPromotionList(idPromotion);
+		
+		return promotionAux.getCouponFromCouponList(idCoupon);
 	}
 	
 	public void createTestStores() {
 		Promotion p = new Promotion();
 		p.setId(Long.valueOf(1));
-		p.setDescription("Promo 1");
+		p.setDescription("Promocao 1");
 		
 		Coupon coupon = new Coupon();
 		coupon.setId(Long.valueOf(1));
@@ -112,8 +172,40 @@ public class StoreService implements IStoreService{
 		s1.setState("State 1");
 		s1.setLocation("Location 1");
 		s1.addPromotion(p);
+
+		Promotion p2 = new Promotion();
+		p2.setId(Long.valueOf(2));
+		p2.setDescription("Promo 2");
 		
+		Coupon coupon2 = new Coupon();
+		coupon2.setId(Long.valueOf(2));
+		coupon2.setDescription("Coupon 2");
+		coupon2.setQrCode("12345678910");
+		p2.addCoupon(coupon2);
+		
+		Store s2 = new Store();
+		s2.setId(Long.valueOf(2));
+		s2.setName("Store 2");
+		s2.setAddress("add 2");
+		s2.setCity("City 2");
+		s2.setState("State 2");
+		s2.setLocation("Location 2");
+		s2.addPromotion(p2);
+
+		Promotion p3 = new Promotion();
+		p3.setId(Long.valueOf(3));
+		p3.setDescription("Promo 3");
+		
+		Coupon coupon3 = new Coupon();
+		coupon3.setId(Long.valueOf(3));
+		coupon3.setDescription("Coupon 3");
+		coupon3.setQrCode("12345678911");
+		p3.addCoupon(coupon3);
+		
+		s2.addPromotion(p3);
+
 		this.addStore(s1);
+		this.addStore(s2);
 	}
 	
 }

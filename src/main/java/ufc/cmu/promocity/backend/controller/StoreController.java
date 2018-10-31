@@ -15,13 +15,14 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 
+import ufc.cmu.promocity.backend.model.Coupon;
+import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
 import ufc.cmu.promocity.backend.service.StoreService;
 
 /**
  * Stores Controller
  * @author armandosoaressousa
- *
  */
 @Component
 @Path("/stores")
@@ -48,9 +49,9 @@ public class StoreController {
     }
     
     /**
-     * Dado um id retorna o JSON dos dados da loja
-     * @param id
-     * @return
+     * Dado um id de uma loja retorna em JSON dos dados da loja
+     * @param id da loja
+     * @return dados da loja
      */
     @GET
     @Produces("application/json")
@@ -60,9 +61,9 @@ public class StoreController {
     }
     
     /**
-     * Dados os dados uma loja no repositorio
+     * Dados os dados de uma loja faz seu registro no repositorio 
      * @param Store
-     * @return
+     * @return codigo http
      */
     @POST
     @Produces("application/json")
@@ -74,10 +75,10 @@ public class StoreController {
     }
     
     /**
-     * Dado um id e os dados do Store faz sua atualizacao
-     * @param id
-     * @param Store
-     * @return
+     * Dado um id e os dados de uma loja faz sua atualizacao no repositorio
+     * @param id da loja
+     * @param Store dados da loja
+     * @return codigo http
      */
     @PUT
     @Consumes("application/json")
@@ -88,9 +89,9 @@ public class StoreController {
     }
     
     /**
-     * Dado um id de um livro faz sua remocao do repositorio
-     * @param id
-     * @return
+     * Dado um id de uma loja faz sua remocao do repositorio
+     * @param id da loja
+     * @return codigo http
      */
     @DELETE
     @Path("/{id}")
@@ -99,15 +100,67 @@ public class StoreController {
         return Response.ok().build();
     }
     
-    /*
-	 * 	lojistas\idLojista\promocoes\add
-		lojistas\idLojista\promocoes\idPromocao
-		lojistas\idLojista\promocoes\list
-	 */
-	/*
-	 * 	lojistas\idLojista\promocoes\idPromocao\cupons\add
-		lojistas\idLojista\promocoes\idPromocao\cupons\idCupom
-		lojistas\idLojista\promocoes\idPromocao\cupons\list
-	 */
+    /**
+     * Get all promotions from specific idStore
+		stores/id/promotions
+ 
+     * Retorna em um JSON todas as promocoes de uma dada lojas cadastrados
+     * id da loja
+     * @return lista de promocoes de uma dada loja
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/promotions")
+    public List<Promotion> getAllPromotionsfromStore(@PathParam("id") String id) {
+        return storeService.getAllPromotionOneStore(Long.parseLong(id));
+    }
+
+    /**
+     * Get a specific idPromotion from specific idStore
+	stores/id/promotions/id
+
+     * Return data from promotion in store
+     * @param idStore da loja
+     * @param idPromotion da promocao
+     * @return dados da promocao especifica
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/promotions/{id}")
+    public Promotion getPromotionFromStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion) {
+    	return storeService.getPromotionFromStore(Long.parseLong(idStore), Long.parseLong(idPromotion));
+    }
+    
+    /**
+    Get all coupons from a specific idPromotion from specific idStore
+    stores/id/promotions/id/coupons
+	
+     * Retorna em um JSON todos os cupons de uma data promocao em uma da loja
+     * id da loja
+     * id da promoca
+     * @return lista de todos os cupons de uma promocao de uma loja
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/promotions/{id}/coupons")
+    public List<Coupon> getCouponsFromPromotionAndStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion) {
+    	return storeService.getAllCouponsFromPromotionAndStore(Long.parseLong(idStore), Long.parseLong(idPromotion));
+    }
+
+    /**
+    Get a specific coupon from a specific idPromotion and specific idStore
+    stores/id/promotions/id/coupons/id
+	
+     * Retorna em um JSON todos os cupons de uma data promocao em uma da loja
+     * id da loja
+     * id da promoca
+     * @return um cupom de uma dada promocao de uma dada loja
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/promotions/{id}/coupons/{id}")
+    public Coupon getCouponFromPromotionAndStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion, @PathParam("id") String idCoupon) {
+    	return storeService.getCouponFromPromotionAndStore(Long.parseLong(idStore), Long.parseLong(idPromotion), Long.parseLong(idCoupon));
+    }
 
 }
