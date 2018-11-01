@@ -40,7 +40,7 @@ public class StoreController {
 
 	 /**
      * Retorna em um JSON todos as lojas cadastrados
-     * @return
+     * @return lista de lojas
      */
     @GET
     @Produces("application/json")
@@ -137,7 +137,7 @@ public class StoreController {
 	
      * Retorna em um JSON todos os cupons de uma data promocao em uma da loja
      * id da loja
-     * id da promoca
+     * id da promocao
      * @return lista de todos os cupons de uma promocao de uma loja
      */
     @GET

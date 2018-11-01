@@ -4,6 +4,7 @@ public class Coupon {
 	private Long id;
 	private String description;
 	private String qrCode;
+	private float discount;
 	
 	public Coupon() {
 		
@@ -33,5 +34,13 @@ public class Coupon {
 	}
 	public void setQrCode(String qrCode) {
 		this.qrCode = qrCode;
+	}
+
+	public float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(float discount) {
+		this.discount = discount;
 	}
 }

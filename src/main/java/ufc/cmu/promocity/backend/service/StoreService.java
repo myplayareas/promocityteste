@@ -1,5 +1,6 @@
 package ufc.cmu.promocity.backend.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,11 +9,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
+import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
 import ufc.cmu.promocity.backend.service.exceptions.StoreNotFoundException;
 import ufc.cmu.promocity.backend.service.interfaces.IStoreService;
+import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
 
 /**
  * Class the manipulate the repository of Stores
@@ -23,9 +26,11 @@ import ufc.cmu.promocity.backend.service.interfaces.IStoreService;
 public class StoreService implements IStoreService{
 	private static AtomicLong contador = new AtomicLong(0);
 	private final Map<Long, Store> stores;
+	public PromotionArea globalPromotionArea;
 	
 	public StoreService() {
 		this.stores = new HashMap<Long, Store>();
+		this.globalPromotionArea = PromotionArea.getInstance();
 	}
 
 	/**
@@ -59,6 +64,7 @@ public class StoreService implements IStoreService{
 		Long id = contador.incrementAndGet();
 		Store.setId(id);
 		stores.put(id, Store);
+		this.globalPromotionArea.addStoresAreas(Store);
 	}
 	
 	/**
@@ -154,15 +160,20 @@ public class StoreService implements IStoreService{
 	}
 	
 	public void createTestStores() {
-		Promotion p = new Promotion();
-		p.setId(Long.valueOf(1));
-		p.setDescription("Promocao 1");
+		Promotion p1 = new Promotion();
+		p1.setId(Long.valueOf(1));
+		p1.setDescription("Promocao 1");
+		Date d1 = new Date();
+		Date d2 = new Date();
+		p1.setFromData(d1);
+		p1.setToData(d2);
 		
-		Coupon coupon = new Coupon();
-		coupon.setId(Long.valueOf(1));
-		coupon.setDescription("Coupon 1");
-		coupon.setQrCode("123456789");
-		p.addCoupon(coupon);
+		Coupon coupon1 = new Coupon();
+		coupon1.setId(Long.valueOf(1));
+		coupon1.setDescription("Coupon 1");
+		coupon1.setQrCode("123456789");
+		coupon1.setDiscount(10);
+		p1.addCoupon(coupon1);
 		
 		Store s1 = new Store();
 		s1.setId(Long.valueOf(1));
@@ -170,17 +181,23 @@ public class StoreService implements IStoreService{
 		s1.setAddress("add 1");
 		s1.setCity("City 1");
 		s1.setState("State 1");
-		s1.setLocation("Location 1");
-		s1.addPromotion(p);
+		GPSPoint location1 = new GPSPoint(0,0);
+		s1.setLocation(location1);
+		s1.addPromotion(p1);
 
 		Promotion p2 = new Promotion();
 		p2.setId(Long.valueOf(2));
 		p2.setDescription("Promo 2");
+		Date d3 = new Date();
+		Date d4 = new Date();
+		p2.setFromData(d3);
+		p2.setToData(d4);
 		
 		Coupon coupon2 = new Coupon();
 		coupon2.setId(Long.valueOf(2));
 		coupon2.setDescription("Coupon 2");
 		coupon2.setQrCode("12345678910");
+		coupon2.setDiscount(20);
 		p2.addCoupon(coupon2);
 		
 		Store s2 = new Store();
@@ -189,17 +206,24 @@ public class StoreService implements IStoreService{
 		s2.setAddress("add 2");
 		s2.setCity("City 2");
 		s2.setState("State 2");
-		s2.setLocation("Location 2");
+		GPSPoint location2 = new GPSPoint(0,0);
+		s2.setLocation(location2);
+		
 		s2.addPromotion(p2);
 
 		Promotion p3 = new Promotion();
 		p3.setId(Long.valueOf(3));
 		p3.setDescription("Promo 3");
+		Date d5 = new Date();
+		Date d6 = new Date();
+		p3.setFromData(d5);
+		p3.setToData(d6);
 		
 		Coupon coupon3 = new Coupon();
 		coupon3.setId(Long.valueOf(3));
 		coupon3.setDescription("Coupon 3");
 		coupon3.setQrCode("12345678911");
+		coupon3.setDiscount(30);
 		p3.addCoupon(coupon3);
 		
 		s2.addPromotion(p3);

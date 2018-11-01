@@ -1,7 +1,11 @@
 package ufc.cmu.promocity.backend.controller;
 
+import ufc.cmu.promocity.backend.context.PromotionArea;
+import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
 import ufc.cmu.promocity.backend.model.User;
 import ufc.cmu.promocity.backend.service.UserService;
+import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
+
 import java.net.URI;
 import java.util.List;
 
@@ -26,6 +30,8 @@ import org.springframework.stereotype.Component;
 @Path("/users")
 public class UserController {
 	private UserService userService;
+	private UserLocationMonitoring userLocationMonitoring;
+	public PromotionArea globalPromotionArea;
 	
 	/**
 	 * Contrutor of UserController
@@ -34,11 +40,12 @@ public class UserController {
 	public UserController(UserService userService) {
 		this.userService = userService;
 		this.userService.createTestUsers();
+	    this.userLocationMonitoring = new UserLocationMonitoring(globalPromotionArea);
 	}
 
 	 /**
      * Retorna em um JSON todos os usuarios cadastrados
-     * @return
+     * @return código http
      */
     @GET
     @Produces("application/json")
@@ -49,7 +56,7 @@ public class UserController {
     /**
      * Dado um id retorna o JSON dos dados do usuario
      * @param id
-     * @return
+     * @return código http
      */
     @GET
     @Produces("application/json")
@@ -59,9 +66,9 @@ public class UserController {
     }
     
     /**
-     * Dados os dados de um livro adiciona um livro no repositorio
+     * Dados os dados de um usuario adiciona um usuario no repositorio
      * @param user
-     * @return
+     * @return código http
      */
     @POST
     @Produces("application/json")
@@ -76,20 +83,50 @@ public class UserController {
      * Dado um id e os dados do user faz sua atualizacao
      * @param id
      * @param user
-     * @return
+     * @return código http
      */
     @PUT
     @Consumes("application/json")
     @Path("/{id}")
     public Response updateUser(@PathParam("id") String id, User user) {
-        userService.updateUser(Long.parseLong(id), user);
+       userService.updateUser(Long.parseLong(id), user);
+       return Response.noContent().build();
+    }
+
+    /**
+     * exemplo de json: 
+     * {
+  		"id": 1,
+  		"latitude": 0,
+  		"longitude": 0
+		}
+     * Dado um id, latitude e longitude de um usuário envia sua localização instantanea
+     * @param id
+     * @param latitude
+     * @param longitude
+     * @return código http
+     */
+    @PUT
+    @Consumes("application/json")
+    @Path("/location/{id}/{latitude}/{longitude}")
+    public Response updateUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
+    	User user = userService.getUser(Long.parseLong(id));
+    	
+    	GPSPoint location = new GPSPoint(Double.valueOf(latitude), Double.valueOf(longitude));
+    	user.setLocation(location);
+    	
+	    this.globalPromotionArea = PromotionArea.getInstance();
+	    this.userLocationMonitoring.setPromotionArea(globalPromotionArea);
+    	
+        userLocationMonitoring.checkNearby(user);
+
         return Response.noContent().build();
     }
     
     /**
      * Dado um id de um livro faz sua remocao do repositorio
      * @param id
-     * @return
+     * @return código http
      */
     @DELETE
     @Path("/{id}")
@@ -98,9 +135,4 @@ public class UserController {
         return Response.ok().build();
     }
     
-    /*
-     * 	usuarios\idUsuario\cupons\add
-		usuarios\idUsuario\cupons\idCupom
-		usuarios\idUsuario\cupons\list
-     */
 }

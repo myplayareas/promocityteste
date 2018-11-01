@@ -4,20 +4,23 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
+
 public class Store {
 	private Long id;
 	private String name;
 	private String address;
 	private String city;
 	private String state;
-	private String location; //TODO manipulate google geoposition
+	private GPSPoint location;
+	private double radius;
 	private List<Promotion> PromotionList = new LinkedList<Promotion>();
 	
 	public Store() {
 		
 	}
 	
-	public Store(Long id, String name, String address, String city, String state, String location, List<Promotion> promotionList) {
+	public Store(Long id, String name, String address, String city, String state, GPSPoint location, List<Promotion> promotionList) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -58,10 +61,10 @@ public class Store {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getLocation() {
+	public GPSPoint getLocation() {
 		return location;
 	}
-	public void setLocation(String location) {
+	public void setLocation(GPSPoint location) {
 		this.location = location;
 	}
 	
@@ -89,6 +92,14 @@ public class Store {
 			}
 		}
 		return null;
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
 	}
 	
 }

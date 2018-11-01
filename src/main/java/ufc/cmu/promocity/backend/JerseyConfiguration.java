@@ -6,6 +6,7 @@ import javax.ws.rs.ApplicationPath;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
+import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.controller.BookController;
 import ufc.cmu.promocity.backend.controller.StoreController;
 import ufc.cmu.promocity.backend.controller.UserController;
@@ -18,8 +19,10 @@ import ufc.cmu.promocity.backend.controller.UserController;
 @Configuration
 @ApplicationPath("promocity")
 public class JerseyConfiguration extends ResourceConfig {
+	public PromotionArea globalPromotionArea;
+	
 	public JerseyConfiguration() {
-		
+		this.globalPromotionArea = new PromotionArea();
 	}
 	
 	/**
@@ -27,6 +30,9 @@ public class JerseyConfiguration extends ResourceConfig {
 	 */
 	@PostConstruct
 	public void setUp() {
+		//Create a global instance of promotionalArea
+		this.globalPromotionArea = PromotionArea.getInstance();
+		
 		register(BookController.class);
 		register(UserController.class);
 		register(StoreController.class);

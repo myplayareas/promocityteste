@@ -1,5 +1,6 @@
 package ufc.cmu.promocity.backend.model;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +9,8 @@ public class Promotion {
 	private Long id;
 	private String description;
 	private List<Coupon> CouponList = new LinkedList<Coupon>();
+	private Date fromData;
+	private Date toData;
 	
 	public Promotion() {
 		
@@ -56,6 +59,22 @@ public class Promotion {
 			}
 		}
 		return null;
+	}
+
+	public Date getFromData() {
+		return fromData;
+	}
+
+	public void setFromData(Date fromData) {
+		this.fromData = fromData;
+	}
+
+	public Date getToData() {
+		return toData;
+	}
+
+	public void setToData(Date toData) {
+		this.toData = toData;
 	}
 			
 }

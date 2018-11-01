@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ufc.cmu.promocity.backend.model.*;
 import ufc.cmu.promocity.backend.service.exceptions.UserNotFoundException;
 import ufc.cmu.promocity.backend.service.interfaces.IUserService;
+import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
 
 /**
  * Class the manipulate the repository of users
@@ -81,10 +82,12 @@ public class UserService implements IUserService{
 	}
 	
 	public void createTestUsers() {
-		User u1 = new User(Long.valueOf(1), "Armando Soares Sousa", "123456", "armando@ufpi.edu.br"); 
-		User u2 = new User(Long.valueOf(2), "Jaão", "123", "joao@gmail.com");
+		User u1 = new User(Long.valueOf(1), "Armando Soares Sousa", "123456", "armando@ufpi.edu.br", new GPSPoint(0,0)); 
+		User u2 = new User(Long.valueOf(2), "Jaão", "123", "joao@gmail.com", new GPSPoint(0,0));
+		User u3 = new User(Long.valueOf(3), "Maria", "456", "maria@gmail.com", new GPSPoint(0,0));
 		this.addUser(u1);
 		this.addUser(u2);
+		this.addUser(u3);
 	}
 	
 }
