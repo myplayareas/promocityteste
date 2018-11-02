@@ -1,6 +1,6 @@
 package ufc.cmu.promocity.backend.context;
 
-import ufc.cmu.promocity.backend.model.User;
+import ufc.cmu.promocity.backend.model.Users;
 
 /**
  * Classe que envia uma mensagem para o usuario
@@ -8,8 +8,8 @@ import ufc.cmu.promocity.backend.model.User;
  *
  */
 public class Messenger {
-	public void send(User user, Object content) {
-		System.out.println("Mensagem enviada" + user.getName());
+	public void send(Users user, Object content) {
+		System.out.println("Mensagem enviada" + user.getUsername());
 	}
 
 	/**
