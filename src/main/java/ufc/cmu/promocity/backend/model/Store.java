@@ -1,42 +1,40 @@
 package ufc.cmu.promocity.backend.model;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
-public class Store {
-	private Long id;
+@Entity
+public class Store extends AbstractModel<Long>{
 	private String name;
 	private String address;
 	private String city;
 	private String state;
-	private GPSPoint location;
+	private double latitude;
+	private double longitude;
 	private double radius;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Promotion> PromotionList = new LinkedList<Promotion>();
 	
 	public Store() {
-		
 	}
 	
-	public Store(Long id, String name, String address, String city, String state, GPSPoint location, List<Promotion> promotionList) {
+	public Store(String name, String address, String city, String state) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.city = city;
 		this.state = state;
-		this.location = location;
-		this.PromotionList = promotionList;
 	}
 	
 	public Long getId() {
-		return id;
+		return super.getId();
 	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
 	public String getName() {
 		return name;
 	}
@@ -61,13 +59,6 @@ public class Store {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public GPSPoint getLocation() {
-		return location;
-	}
-	public void setLocation(GPSPoint location) {
-		this.location = location;
-	}
-	
 	public List<Promotion> getPromotionList() {
 		return PromotionList;
 	}
@@ -79,27 +70,28 @@ public class Store {
 		this.PromotionList.add(promotion);		
 	}
 	
-	/**
-	 * Percorre a lista de promocoes até encontrar a promocao com idPromocao
-	 * @param idPromocao promocao pesquisada
-	 * @return promocao encontrada
-	 */
-	public Promotion getPromotionFromPromotionList(Long idPromotion) {
-		for (Iterator<Promotion> iterator = this.getPromotionList().iterator(); iterator.hasNext();) {
-			Promotion promotion = (Promotion)iterator.next();
-			if (promotion.getId()==idPromotion) {
-				return promotion;
-			}
-		}
-		return null;
-	}
-
 	public double getRadius() {
 		return radius;
 	}
 
 	public void setRadius(double radius) {
 		this.radius = radius;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 	
 }

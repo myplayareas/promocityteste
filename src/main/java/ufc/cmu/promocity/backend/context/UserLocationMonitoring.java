@@ -33,11 +33,9 @@ public class UserLocationMonitoring{
 	public void checkNearby(Users user) {
 		List<Store> listOfStoreRegistered = this.promotionArea.getStoreAreasRegistered();
 		
-		for (Store element : listOfStoreRegistered) {
-			GPSPoint storeLocation = element.getLocation();
-						
+		for (Store element : listOfStoreRegistered) {				
 			//calcula a distancia entre a localizacao do usuario e da localizacao
-			double userDistance = new GeographicArea().distance(storeLocation.getLatitude(), storeLocation.getLongitude(), user.getLatitude(), user.getLongitude());
+			double userDistance = new GeographicArea().distance(element.getLatitude(), element.getLongitude(), user.getLatitude(), user.getLongitude());
 			 
 			//Veriica se o usuário ainda NÃO recebeu cupom dessa loja
 			boolean checkCoupon = userAlreadyPromotionStore(element.getId(), user.getId()); 

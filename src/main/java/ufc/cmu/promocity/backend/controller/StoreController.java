@@ -1,6 +1,7 @@
 package ufc.cmu.promocity.backend.controller;
 
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -35,7 +36,6 @@ public class StoreController {
 	 */
 	public StoreController(StoreService storeService) {
 		this.storeService = storeService;
-		this.storeService.createTestStores();
 	}
 
 	 /**
@@ -45,7 +45,7 @@ public class StoreController {
     @GET
     @Produces("application/json")
     public List<Store> getAllStores() {
-        return storeService.getAllStores();
+        return storeService.getListAll();
     }
     
     /**
@@ -57,7 +57,7 @@ public class StoreController {
     @Produces("application/json")
     @Path("/{id}")
     public Store getStore(@PathParam("id") String id) {
-    	return storeService.getStore(Long.parseLong(id));
+    	return storeService.get(Long.parseLong(id));
     }
     
     /**
@@ -69,7 +69,7 @@ public class StoreController {
     @Produces("application/json")
     @Consumes("application/json")
     public Response addStore(Store Store) {
-        storeService.addStore(Store);
+        storeService.save(Store);
         URI uri = URI.create("/" + String.valueOf(Store.getId()));
 		return Response.created(uri).build();
     }
@@ -84,7 +84,7 @@ public class StoreController {
     @Consumes("application/json")
     @Path("/{id}")
     public Response updateStore(@PathParam("id") String id, Store Store) {
-        storeService.updateStore(Long.parseLong(id), Store);
+        storeService.update(Store);
         return Response.noContent().build();
     }
     
@@ -96,7 +96,7 @@ public class StoreController {
     @DELETE
     @Path("/{id}")
     public Response deleteStore(@PathParam("id") String id) {
-        storeService.deleteStore(Long.parseLong(id));
+        storeService.delete(Long.parseLong(id));
         return Response.ok().build();
     }
     
@@ -112,7 +112,7 @@ public class StoreController {
     @Produces("application/json")
     @Path("/{id}/promotions")
     public List<Promotion> getAllPromotionsfromStore(@PathParam("id") String id) {
-        return storeService.getAllPromotionOneStore(Long.parseLong(id));
+        return storeService.get(Long.parseLong(id)).getPromotionList();
     }
 
     /**
@@ -128,7 +128,15 @@ public class StoreController {
     @Produces("application/json")
     @Path("/{id}/promotions/{id}")
     public Promotion getPromotionFromStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion) {
-    	return storeService.getPromotionFromStore(Long.parseLong(idStore), Long.parseLong(idPromotion));
+    	Store store = storeService.get(Long.parseLong(idStore));
+    	
+    	for (Promotion element : store.getPromotionList()) {
+    		if (element.getId() == Long.parseLong(idPromotion)) {
+    			return element;
+    		}
+    	}
+    	
+    	return null;
     }
     
     /**
@@ -144,7 +152,16 @@ public class StoreController {
     @Produces("application/json")
     @Path("/{id}/promotions/{id}/coupons")
     public List<Coupon> getCouponsFromPromotionAndStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion) {
-    	return storeService.getAllCouponsFromPromotionAndStore(Long.parseLong(idStore), Long.parseLong(idPromotion));
+    	Store store = storeService.get(Long.parseLong(idStore));
+    	Promotion promotion = null; 
+    	
+    	for (Promotion element : store.getPromotionList()) {
+    		if (element.getId() == Long.parseLong(idPromotion)) {
+    			promotion = element;
+    		}
+    	}
+    	
+    	return promotion.getCoupons();
     }
 
     /**
@@ -160,7 +177,22 @@ public class StoreController {
     @Produces("application/json")
     @Path("/{id}/promotions/{id}/coupons/{id}")
     public Coupon getCouponFromPromotionAndStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion, @PathParam("id") String idCoupon) {
-    	return storeService.getCouponFromPromotionAndStore(Long.parseLong(idStore), Long.parseLong(idPromotion), Long.parseLong(idCoupon));
+    	Store store = storeService.get(Long.parseLong(idStore));
+    	Promotion promotion = null; 
+    	
+    	for (Promotion element : store.getPromotionList()) {
+    		if (element.getId() == Long.parseLong(idPromotion)) {
+    			promotion = element;
+    		}
+    	}
+    	   	
+    	for (Coupon element : promotion.getCoupons()) {
+    		if (element.getId() == Long.parseLong(idCoupon)) {
+    			return element;
+    		}
+    	}
+    	
+    	return null;
     }
 
 }

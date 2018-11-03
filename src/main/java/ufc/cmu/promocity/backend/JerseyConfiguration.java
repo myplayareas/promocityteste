@@ -40,6 +40,7 @@ public class JerseyConfiguration extends ResourceConfig {
 		register(StoreController.class);
 		register(CouponController.class);
 		register(PromotionController.class);
+		register(StoreController.class);
 		register(GenericExceptionMapper.class);
 	}
 }
