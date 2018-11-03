@@ -1,33 +1,34 @@
 package ufc.cmu.promocity.backend.model;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Promotion {
-	private Long id;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+@Entity
+public class Promotion extends AbstractModel<Long>{
+	
 	private String description;
-	private List<Coupon> CouponList = new LinkedList<Coupon>();
-	private Date fromData;
-	private Date toData;
+	private Date fromDate;
+	private Date toDate;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Coupon> coupons;
 	
 	public Promotion() {
-		
 	}
 	
 	public Promotion(Long id, String description, List<Coupon> CouponList) {
 		super();
-		this.id = id;
 		this.description = description;
-		this.CouponList = CouponList;
+		this.coupons = CouponList;
 	}
 	
 	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
+		return super.getId();
 	}
 	public String getDescription() {
 		return description;
@@ -35,46 +36,29 @@ public class Promotion {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<Coupon> getCouponList() {
-		return CouponList;
-	}
-	public void setCouponList(List<Coupon> couponList) {
-		CouponList = couponList;
-	}
-	
-	public void addCoupon(Coupon coupon) {
-		this.CouponList.add(coupon);
+
+	public Date getFromDate() {
+		return fromDate;
 	}
 
-	/**
-	 * Percorre a lista de cupons até encontrar o cupom do idCoupon
-	 * @param idCoupon do cupom pesquisado
-	 * @return Coupon encontrado
-	 */
-	public Coupon getCouponFromCouponList(Long idCoupon) {
-		for (Iterator<Coupon> iterator = this.getCouponList().iterator(); iterator.hasNext();) {
-			Coupon coupon = (Coupon) iterator.next();
-			if (coupon.getId() == idCoupon) {
-				return coupon;
-			}
-		}
-		return null;
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
 	}
 
-	public Date getFromData() {
-		return fromData;
+	public Date getToDate() {
+		return toDate;
 	}
 
-	public void setFromData(Date fromData) {
-		this.fromData = fromData;
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
 
-	public Date getToData() {
-		return toData;
+	public List<Coupon> getCoupons() {
+		return coupons;
 	}
 
-	public void setToData(Date toData) {
-		this.toData = toData;
+	public void setCoupons(List<Coupon> coupons) {
+		this.coupons = coupons;
 	}
 			
 }

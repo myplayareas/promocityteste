@@ -118,7 +118,7 @@ public class StoreService implements IStoreService{
 		Promotion promotionAux = storeAux.getPromotionFromPromotionList(idPromotion);
 		
 		//add coupon in promotion with idPromotion
-		promotionAux.addCoupon(coupon);
+		//promotionAux.addCoupon(coupon);
 		//TODO : FAZER A ATUALIZAÇÃO DA PROMOCAO NA LOJA ESPECIFICA
 	}
 	
@@ -146,7 +146,7 @@ public class StoreService implements IStoreService{
 		//find a store with idStore in list of stores
 		Store storeAux = this.stores.get(idStore);
 		
-		return storeAux.getPromotionFromPromotionList(idPromotion).getCouponList();
+		return null;//storeAux.getPromotionFromPromotionList(idPromotion).getCouponList();
 	}
 	
 	public Coupon getCouponFromPromotionAndStore(long idStore, long idPromotion, long idCoupon) {
@@ -154,9 +154,9 @@ public class StoreService implements IStoreService{
 		Store storeAux = this.stores.get(idStore);
 		
 		//Find a promotion in a list of promotions
-		Promotion promotionAux = storeAux.getPromotionFromPromotionList(idPromotion);
+		//Promotion promotionAux = storeAux.getPromotionFromPromotionList(idPromotion);
 		
-		return promotionAux.getCouponFromCouponList(idCoupon);
+		return null;//promotionAux.getCouponFromCouponList(idCoupon);
 	}
 	
 	public void createTestStores() {
@@ -165,15 +165,15 @@ public class StoreService implements IStoreService{
 		p1.setDescription("Promocao 1");
 		Date d1 = new Date();
 		Date d2 = new Date();
-		p1.setFromData(d1);
-		p1.setToData(d2);
+		p1.setFromDate(d1);
+		p1.setToDate(d2);
 		
 		Coupon coupon1 = new Coupon();
 		coupon1.setId(Long.valueOf(1));
 		coupon1.setDescription("Coupon 1");
 		coupon1.setQrCode("123456789");
 		coupon1.setDiscount(10);
-		p1.addCoupon(coupon1);
+		//p1.addCoupon(coupon1);
 		
 		Store s1 = new Store();
 		s1.setId(Long.valueOf(1));
@@ -190,15 +190,15 @@ public class StoreService implements IStoreService{
 		p2.setDescription("Promo 2");
 		Date d3 = new Date();
 		Date d4 = new Date();
-		p2.setFromData(d3);
-		p2.setToData(d4);
+		p2.setFromDate(d3);
+		p2.setToDate(d4);
 		
 		Coupon coupon2 = new Coupon();
 		coupon2.setId(Long.valueOf(2));
 		coupon2.setDescription("Coupon 2");
 		coupon2.setQrCode("12345678910");
 		coupon2.setDiscount(20);
-		p2.addCoupon(coupon2);
+		//p2.addCoupon(coupon2);
 		
 		Store s2 = new Store();
 		s2.setId(Long.valueOf(2));
@@ -216,15 +216,15 @@ public class StoreService implements IStoreService{
 		p3.setDescription("Promo 3");
 		Date d5 = new Date();
 		Date d6 = new Date();
-		p3.setFromData(d5);
-		p3.setToData(d6);
+		p3.setFromDate(d5);
+		p3.setToDate(d6);
 		
 		Coupon coupon3 = new Coupon();
 		coupon3.setId(Long.valueOf(3));
 		coupon3.setDescription("Coupon 3");
 		coupon3.setQrCode("12345678911");
 		coupon3.setDiscount(30);
-		p3.addCoupon(coupon3);
+		//p3.addCoupon(coupon3);
 		
 		s2.addPromotion(p3);
 
