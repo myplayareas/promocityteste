@@ -126,8 +126,8 @@ public class StoreController {
      */
     @GET
     @Produces("application/json")
-    @Path("/{id}/promotions/{id}")
-    public Promotion getPromotionFromStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion) {
+    @Path("/{idStore}/promotions/{idPromotion}")
+    public Promotion getPromotionFromStore(@PathParam("idStore") String idStore, @PathParam("idPromotion") String idPromotion) {
     	Store store = storeService.get(Long.parseLong(idStore));
     	
     	for (Promotion element : store.getPromotionList()) {
@@ -150,8 +150,8 @@ public class StoreController {
      */
     @GET
     @Produces("application/json")
-    @Path("/{id}/promotions/{id}/coupons")
-    public List<Coupon> getCouponsFromPromotionAndStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion) {
+    @Path("/{idStore}/promotions/{idPromotion}/coupons")
+    public List<Coupon> getCouponsFromPromotionAndStore(@PathParam("idStore") String idStore, @PathParam("idPromotion") String idPromotion) {
     	Store store = storeService.get(Long.parseLong(idStore));
     	Promotion promotion = null; 
     	
@@ -175,8 +175,8 @@ public class StoreController {
      */
     @GET
     @Produces("application/json")
-    @Path("/{id}/promotions/{id}/coupons/{id}")
-    public Coupon getCouponFromPromotionAndStore(@PathParam("id") String idStore, @PathParam("id") String idPromotion, @PathParam("id") String idCoupon) {
+    @Path("/{idStore}/promotions/{idPromotion}/coupons/{idCoupon}")
+    public Coupon getCouponFromPromotionAndStore(@PathParam("idStore") String idStore, @PathParam("idPromotion") String idPromotion, @PathParam("idCoupon") String idCoupon) {
     	Store store = storeService.get(Long.parseLong(idStore));
     	Promotion promotion = null; 
     	
