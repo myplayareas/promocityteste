@@ -2,9 +2,9 @@ package ufc.cmu.promocity.backend.controller;
 
 import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
+import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.service.UsersService;
-import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
 
 import java.net.URI;
 import java.util.LinkedList;
@@ -142,6 +142,45 @@ public class UserController {
     public Response deleteUser(@PathParam("id") String id) {
         userService.delete(Long.parseLong(id));
         return Response.ok().build();
+    }
+    
+    /**
+     * Get all coupons from specific idUser
+		users/id/coupons
+ 
+     * Retorna em um JSON todas os cupons de um dado user cadastrado
+     * id do user
+     * @return lista de cupons de um usuario
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/coupons")
+    public List<Coupon> getAllCouponsfromUser(@PathParam("id") String id) {
+        return userService.get(Long.parseLong(id)).getCouponList();
+    }
+
+    /**
+     * Get a specific coupon from specific user
+	users/idUser/coupons/idCoupon
+
+     * Return data from coupon in user
+     * @param idUser 
+     * @param idPCoupon
+     * @return dados do coupon especifico
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{idUser}/promotions/{idCoupon}")
+    public Coupon getCouponFromUser(@PathParam("idUser") String idUser, @PathParam("idCoupon") String idCoupon) {
+    	Users users = userService.get(Long.parseLong(idUser));
+    	
+    	for (Coupon element : users.getCouponList()) {
+    		if (element.getId() == Long.parseLong(idCoupon)) {
+    			return element;
+    		}
+    	}
+    	
+    	return null;
     }
     
 }

@@ -1,7 +1,14 @@
 package ufc.cmu.promocity.backend.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
 import org.hibernate.annotations.Type;
 
 import ufc.cmu.promocity.backend.model.AbstractModel;
@@ -26,6 +33,9 @@ public class Users extends AbstractModel<Long>{
 	//private GPSPoint location;
 	private double latitude;
 	private double longitude;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Coupon> couponList = new LinkedList<Coupon>();
 	
 	public Users() {
 	}
@@ -88,4 +98,15 @@ public class Users extends AbstractModel<Long>{
 		this.longitude = longitude;
 	}
 
+	public List<Coupon> getCouponList() {
+		return couponList;
+	}
+
+	public void setCouponList(List<Coupon> listCoupons) {
+		this.couponList = listCoupons;
+	}
+
+	public void addCoupon(Coupon coupon) {
+		this.couponList.add(coupon);
+	}
 }
