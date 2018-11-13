@@ -2,11 +2,12 @@ package ufc.cmu.promocity.backend.controller;
 
 import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
-import ufc.cmu.promocity.backend.model.User;
-import ufc.cmu.promocity.backend.service.UserService;
-import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
+import ufc.cmu.promocity.backend.model.Coupon;
+import ufc.cmu.promocity.backend.model.Users;
+import ufc.cmu.promocity.backend.service.UsersService;
 
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -19,6 +20,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,17 +31,20 @@ import org.springframework.stereotype.Component;
 @Component
 @Path("/users")
 public class UserController {
-	private UserService userService;
+	private UsersService userService;
 	private UserLocationMonitoring userLocationMonitoring;
 	public PromotionArea globalPromotionArea;
+	
+	@Autowired
+	public void setUserService(UsersService userServices){
+		this.userService = userServices;
+	}
 	
 	/**
 	 * Contrutor of UserController
 	 * @param userService
 	 */
-	public UserController(UserService userService) {
-		this.userService = userService;
-		this.userService.createTestUsers();
+	public UserController() {
 	    this.userLocationMonitoring = new UserLocationMonitoring(globalPromotionArea);
 	}
 
@@ -49,8 +54,10 @@ public class UserController {
      */
     @GET
     @Produces("application/json")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<Users> getAllUsers() {
+       	List<Users> listUsers = new LinkedList<Users>();
+    	listUsers = userService.getListAll();
+    	return listUsers;
     }
     
     /**
@@ -61,8 +68,8 @@ public class UserController {
     @GET
     @Produces("application/json")
     @Path("/{id}")
-    public User getUser(@PathParam("id") String id) {
-    	return userService.getUser(Long.parseLong(id));
+    public Users getUser(@PathParam("id") String id) {
+    	return userService.get(Long.parseLong(id));
     }
     
     /**
@@ -73,8 +80,8 @@ public class UserController {
     @POST
     @Produces("application/json")
     @Consumes("application/json")
-    public Response addUser(User user) {
-        userService.addUser(user);
+    public Response addUser(Users user) {
+        userService.save(user);
         URI uri = URI.create("/" + String.valueOf(user.getId()));
 		return Response.created(uri).build();
     }
@@ -88,13 +95,15 @@ public class UserController {
     @PUT
     @Consumes("application/json")
     @Path("/{id}")
-    public Response updateUser(@PathParam("id") String id, User user) {
-       userService.updateUser(Long.parseLong(id), user);
+    public Response updateUser(@PathParam("id") String id, Users user) {
+       userService.save(user);
        return Response.noContent().build();
     }
 
     /**
-     * exemplo de json: 
+     * requisicao do servico via PUT
+     * ../1/location/0/0
+     * exemplo dados enviados em forma de json: 
      * {
   		"id": 1,
   		"latitude": 0,
@@ -108,12 +117,12 @@ public class UserController {
      */
     @PUT
     @Consumes("application/json")
-    @Path("/location/{id}/{latitude}/{longitude}")
+    @Path("{id}/location/{latitude}/{longitude}")
     public Response updateUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
-    	User user = userService.getUser(Long.parseLong(id));
+    	Users user = userService.get(Long.parseLong(id));
     	
-    	GPSPoint location = new GPSPoint(Double.valueOf(latitude), Double.valueOf(longitude));
-    	user.setLocation(location);
+    	user.setLatitude(Double.valueOf(latitude));
+    	user.setLongitude(Double.valueOf(longitude));
     	
 	    this.globalPromotionArea = PromotionArea.getInstance();
 	    this.userLocationMonitoring.setPromotionArea(globalPromotionArea);
@@ -124,15 +133,54 @@ public class UserController {
     }
     
     /**
-     * Dado um id de um livro faz sua remocao do repositorio
+     * Dado um id de um usuario faz sua remocao do repositorio
      * @param id
      * @return código http
      */
     @DELETE
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") String id) {
-        userService.deleteUser(Long.parseLong(id));
+        userService.delete(Long.parseLong(id));
         return Response.ok().build();
+    }
+    
+    /**
+     * Get all coupons from specific idUser
+		users/id/coupons
+ 
+     * Retorna em um JSON todas os cupons de um dado user cadastrado
+     * id do user
+     * @return lista de cupons de um usuario
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{id}/coupons")
+    public List<Coupon> getAllCouponsfromUser(@PathParam("id") String id) {
+        return userService.get(Long.parseLong(id)).getCouponList();
+    }
+
+    /**
+     * Get a specific coupon from specific user
+	users/idUser/coupons/idCoupon
+
+     * Return data from coupon in user
+     * @param idUser 
+     * @param idPCoupon
+     * @return dados do coupon especifico
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{idUser}/promotions/{idCoupon}")
+    public Coupon getCouponFromUser(@PathParam("idUser") String idUser, @PathParam("idCoupon") String idCoupon) {
+    	Users users = userService.get(Long.parseLong(idUser));
+    	
+    	for (Coupon element : users.getCouponList()) {
+    		if (element.getId() == Long.parseLong(idCoupon)) {
+    			return element;
+    		}
+    	}
+    	
+    	return null;
     }
     
 }

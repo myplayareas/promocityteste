@@ -3,7 +3,7 @@ package ufc.cmu.promocity.backend.context;
 import java.util.LinkedList;
 import java.util.List;
 
-import ufc.cmu.promocity.backend.model.User;
+import ufc.cmu.promocity.backend.model.Users;
 
 /**
  * Classe que registra em uma lista cupons já enviados para um usuario
@@ -12,13 +12,13 @@ import ufc.cmu.promocity.backend.model.User;
  */
 public class CouponsSent {
 	private static CouponsSent instance = null;
-	private List<User> UserAlreadyRegistered; 
+	private List<Users> UserAlreadyRegistered; 
 	
 	public CouponsSent() {		
-		this.UserAlreadyRegistered = new LinkedList<User>();
+		this.UserAlreadyRegistered = new LinkedList<Users>();
 	}
 		
-	public CouponsSent(List<User> list) {
+	public CouponsSent(List<Users> list) {
 		this.UserAlreadyRegistered = list;
 	}
 	
@@ -37,7 +37,7 @@ public class CouponsSent {
 	 * Add a User list
 	 * @param sa
 	 */
-	public void addUsersAlready(User sa) {
+	public void addUsersAlready(Users sa) {
 		this.UserAlreadyRegistered.add(sa);
 	}
 	
@@ -45,7 +45,7 @@ public class CouponsSent {
 	 * Remove a User from list of UserArea
 	 * @param sa UserArea of User unregistered
 	 */
-	public void removeUserFromUsersAlready(User sa) {
+	public void removeUserFromUsersAlready(Users sa) {
 		this.UserAlreadyRegistered.remove(sa);
 	}
 
@@ -53,7 +53,7 @@ public class CouponsSent {
 	 * Retorna todas as Already de promocao das lojas registradas
 	 * @return
 	 */
-	public List<User> getUserAlreadyRegistered() {
+	public List<Users> getUserAlreadyRegistered() {
 		return this.UserAlreadyRegistered;
 	}
 		

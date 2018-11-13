@@ -3,7 +3,7 @@ package ufc.cmu.promocity.backend.context;
 import java.util.List;
 
 import ufc.cmu.promocity.backend.model.Store;
-import ufc.cmu.promocity.backend.model.User;
+import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.utils.geographic.GPSPoint;
 import ufc.cmu.promocity.backend.utils.geographic.GeographicArea;
 
@@ -30,14 +30,12 @@ public class UserLocationMonitoring{
 	 * Checa a proximidade do usuario dentro de uma lista de areas de promocoes
 	 * @param userLocation
 	 */
-	public void checkNearby(User user) {
+	public void checkNearby(Users user) {
 		List<Store> listOfStoreRegistered = this.promotionArea.getStoreAreasRegistered();
 		
-		for (Store element : listOfStoreRegistered) {
-			GPSPoint storeLocation = element.getLocation();
-						
+		for (Store element : listOfStoreRegistered) {				
 			//calcula a distancia entre a localizacao do usuario e da localizacao
-			double userDistance = new GeographicArea().distance(storeLocation, user.getLocation());
+			double userDistance = new GeographicArea().distance(element.getLatitude(), element.getLongitude(), user.getLatitude(), user.getLongitude());
 			 
 			//Veriica se o usuário ainda NÃO recebeu cupom dessa loja
 			boolean checkCoupon = userAlreadyPromotionStore(element.getId(), user.getId()); 
@@ -48,7 +46,7 @@ public class UserLocationMonitoring{
 				//envia mensagem para usuario com o cupom da promocao
 				Object coupon = "Cupom teste da loja " + element.getName(); 
 				Object content = "Conteudo teste";
-				new Messenger().sendPromotion(String.valueOf(user.getId()) + user.getName(), coupon, content);
+				new Messenger().sendPromotion(String.valueOf(user.getId()) + user.getUsername(), coupon, content);
 			}
 		}
 		
@@ -56,7 +54,7 @@ public class UserLocationMonitoring{
 	
 	private boolean userAlreadyPromotionStore(Long idStore, Long idUser) {
 		boolean newCoupon=false;
-		
+		//TODO falta implementar a regra...
 		//checa se o usuário já recebeu uma promocao da loja
 		newCoupon = true;
 		
@@ -79,5 +77,4 @@ public class UserLocationMonitoring{
 		this.promotionArea = promotionArea;
 	}
 
-	
 }

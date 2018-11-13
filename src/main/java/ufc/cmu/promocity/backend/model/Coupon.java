@@ -1,27 +1,30 @@
 package ufc.cmu.promocity.backend.model;
 
-public class Coupon {
-	private Long id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class Coupon extends AbstractModel<Long>{
+	
+	@Column(length=255)
 	private String description;
-	private String qrCode;
 	private float discount;
+	private String qrCode;
 	
 	public Coupon() {
-		
 	}
 	
 	public Coupon(Long id, String description, String qrCode) {
 		super();
-		this.id = id;
 		this.description = description;
 		this.qrCode = qrCode;
 	}
 	
 	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
+		return super.getId();
 	}
 	public String getDescription() {
 		return description;

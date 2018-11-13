@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ufc.cmu.promocity.backend.model.Store;
-import ufc.cmu.promocity.backend.model.User;
+import ufc.cmu.promocity.backend.model.Users;
 
 /**
  * Classe que registra em uma lista uma area de promocao contendo todas as lojas registradas no sistema

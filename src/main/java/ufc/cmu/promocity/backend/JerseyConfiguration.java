@@ -8,8 +8,12 @@ import org.springframework.context.annotation.Configuration;
 
 import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.controller.BookController;
+import ufc.cmu.promocity.backend.controller.CouponController;
+import ufc.cmu.promocity.backend.controller.PrincipalController;
+import ufc.cmu.promocity.backend.controller.PromotionController;
 import ufc.cmu.promocity.backend.controller.StoreController;
 import ufc.cmu.promocity.backend.controller.UserController;
+import ufc.cmu.promocity.backend.report.ReportApplication;
 
 /**
  * Faz a configuracao do Servico Jersey
@@ -36,6 +40,10 @@ public class JerseyConfiguration extends ResourceConfig {
 		register(BookController.class);
 		register(UserController.class);
 		register(StoreController.class);
+		register(CouponController.class);
+		register(PromotionController.class);
+		register(StoreController.class);
+		register(PrincipalController.class);
 		register(GenericExceptionMapper.class);
 	}
 }
