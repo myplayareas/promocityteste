@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
+import ufc.cmu.promocity.backend.report.ReportCoupon;
+import ufc.cmu.promocity.backend.report.ReportPromotion;
 import ufc.cmu.promocity.backend.service.StoreService;
 
 /**
@@ -140,6 +142,32 @@ public class StoreController {
     }
     
     /**
+     * Get a specific idPromotion from specific idStore
+	stores/id/reportpromotions/id
+
+     * Return data from promotion in store
+     * @param idStore da loja
+     * @param idPromotion da promocao
+     * @return dados da promocao especifica
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{idStore}/reportpromotions/{idPromotion}")
+    public ReportPromotion getReportPromotionFromStore(@PathParam("idStore") String idStore, @PathParam("idPromotion") String idPromotion) {    	    	
+    	Store store = storeService.get(Long.parseLong(idStore));
+
+    	for (Promotion element : store.getPromotionList()) {
+    		if (element.getId() == Long.parseLong(idPromotion)) {
+    			ReportPromotion reportPromotion = new ReportPromotion(element, store);
+    			return reportPromotion;
+    		}
+    	}
+    	
+    	return null;
+    }
+
+    
+    /**
     Get all coupons from a specific idPromotion from specific idStore
     stores/id/promotions/id/coupons
 	
@@ -195,4 +223,37 @@ public class StoreController {
     	return null;
     }
 
+    /**
+    Get a specific coupon from a specific idPromotion and specific idStore
+    stores/id/promotions/id/coupons/id
+	
+     * Retorna em um JSON todos os cupons de uma data promocao em uma da loja
+     * id da loja
+     * id da promoca
+     * @return um cupom de uma dada promocao de uma dada loja
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{idStore}/promotions/{idPromotion}/reportcoupons/{idCoupon}")
+    public ReportCoupon getReportCouponFromPromotionAndStore(@PathParam("idStore") String idStore, @PathParam("idPromotion") String idPromotion, @PathParam("idCoupon") String idCoupon) {
+    	Store store = storeService.get(Long.parseLong(idStore));
+    	Promotion promotion = null; 
+    	
+    	for (Promotion element : store.getPromotionList()) {
+    		if (element.getId() == Long.parseLong(idPromotion)) {
+    			promotion = element;
+    		}
+    	}
+    	   	
+    	for (Coupon element : promotion.getCoupons()) {
+    		if (element.getId() == Long.parseLong(idCoupon)) {
+    			ReportCoupon reportCoupon = new ReportCoupon(store, promotion, element);
+    			return reportCoupon;
+    		}
+    	}
+    	
+    	return null;
+    }
+
+    
 }
