@@ -1,6 +1,3 @@
---Create the database promocity
-CREATE DATABASE promocity;
-
 --Create users table to give access to aplication
 CREATE TABLE users (
   username VARCHAR(50)  NOT NULL PRIMARY KEY,
