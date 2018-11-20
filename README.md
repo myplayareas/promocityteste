@@ -28,22 +28,42 @@ Sobre as operações para execução da aplicação
 
 1. Faça o clone do repositório.
 
-2. Limpe o projeto via comando clean do maven.
+2. Crie o banco promocity.
+```
+create database promocity
+```
+3. Rode o script security.sql para criar as tabelas users e authorities
+
+4. Rode o script populausers.sql para inserir o usuário armando (usuário armando/armando)
+
+5. Limpe o projeto via comando clean do maven.
 ```
 $mvn clean
 ```
-3. Compile o projeto via modo teste do maven. 
+6. Compile o projeto via modo teste do maven. Com isso, as demais tabelas serão criadas e atualizadas. 
 ```
 $mvn test
 ```
-4. Execute a classe principal (BackendApplication) do projeto via maven. 
+7. Rode o script populadados.sql para popular com dados de exemplos. Para que sejam inseridos dados de exemplos para lojas, promoções e cupons. 
+
+8. Execute a classe principal (BackendApplication) do projeto via maven. 
 ```
 $mvn spring-boot:run
 ```
-5. Listagens com dados de teste:
+9. Listagens com dados de teste:
 
-* localhost:8082/promocity/users
-* localhost:8082/promocity/stores
+http://localhost:8082/promocity 
+
+mostra os seguintes recursos disponíveis
+
+"http://localhost:8082/promocity/stores",
+"http://localhost:8082/promocity/stores/idStore/promotions",
+"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion",
+"http://localhost:8082/promocity/stores/idStore/reportpromotions/idPromotion",
+"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/coupons",
+"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/coupons/idCoupon",
+"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/reportcoupons/idCoupon"
+
 
 Referências
 ---
