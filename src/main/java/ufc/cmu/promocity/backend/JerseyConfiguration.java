@@ -38,11 +38,10 @@ public class JerseyConfiguration extends ResourceConfig {
 		this.globalPromotionArea = PromotionArea.getInstance();
 		
 		register(BookController.class);
-		register(UserController.class);
 		register(StoreController.class);
+		register(UserController.class);		
 		register(CouponController.class);
 		register(PromotionController.class);
-		register(StoreController.class);
 		register(PrincipalController.class);
 		register(GenericExceptionMapper.class);
 	}

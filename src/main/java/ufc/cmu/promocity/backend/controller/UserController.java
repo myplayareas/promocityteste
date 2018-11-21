@@ -3,7 +3,9 @@ package ufc.cmu.promocity.backend.controller;
 import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
 import ufc.cmu.promocity.backend.model.Coupon;
+import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Users;
+import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.UsersService;
 
 import java.net.URI;
@@ -34,10 +36,16 @@ public class UserController {
 	private UsersService userService;
 	private UserLocationMonitoring userLocationMonitoring;
 	public PromotionArea globalPromotionArea;
+	private StoreService storeService;
 	
 	@Autowired
 	public void setUserService(UsersService userServices){
 		this.userService = userServices;
+	}
+	
+	@Autowired
+	public void setStoreService(StoreService storeService) {
+		this.storeService = storeService;
 	}
 	
 	/**
@@ -45,7 +53,7 @@ public class UserController {
 	 * @param userService
 	 */
 	public UserController() {
-	    this.userLocationMonitoring = new UserLocationMonitoring(globalPromotionArea);
+	    this.userLocationMonitoring = new UserLocationMonitoring(globalPromotionArea);	   
 	}
 
 	 /**
@@ -115,21 +123,31 @@ public class UserController {
      * @param longitude
      * @return código http
      */
-    @PUT
-    @Consumes("application/json")
+    @GET
+    @Produces("application/json")
     @Path("{id}/location/{latitude}/{longitude}")
-    public Response updateUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
+    public List<Promotion> updateUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
     	Users user = userService.get(Long.parseLong(id));
     	
     	user.setLatitude(Double.valueOf(latitude));
     	user.setLongitude(Double.valueOf(longitude));
     	
 	    this.globalPromotionArea = PromotionArea.getInstance();
+	    this.globalPromotionArea.setStoreAreasRegistered(this.storeService.getListAll());
 	    this.userLocationMonitoring.setPromotionArea(globalPromotionArea);
     	
         userLocationMonitoring.checkNearby(user);
-
-        return Response.noContent().build();
+        
+        long idStore = userLocationMonitoring.getIdStore();
+        List<Promotion> promotionList = storeService.get(idStore).getPromotionList();
+        
+        if (idStore != 0) {
+        	//envia mensagem para o usuário
+        	System.out.println("O usuário " + id + " acaba de receber os cupons das promoções da Loja " + idStore);        	
+        }else {
+        	return null;
+        }
+        return promotionList;
     }
     
     /**

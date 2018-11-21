@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 
+import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
@@ -31,6 +32,7 @@ import ufc.cmu.promocity.backend.service.StoreService;
 @Path("/stores")
 public class StoreController {
 	private StoreService storeService;
+	public PromotionArea globalPromotionArea;
 	
 	/**
 	 * Contrutor of StoreController
@@ -38,6 +40,7 @@ public class StoreController {
 	 */
 	public StoreController(StoreService storeService) {
 		this.storeService = storeService;
+		this.globalPromotionArea = PromotionArea.getInstance();
 	}
 
 	 /**

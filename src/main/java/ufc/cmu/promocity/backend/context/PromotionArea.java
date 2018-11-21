@@ -57,5 +57,10 @@ public class PromotionArea {
 	public List<Store> getStoreAreasRegistered() {
 		return this.storeAreasRegistered;
 	}
+
+	public void setStoreAreasRegistered(List<Store> storeAreasRegistered) {
+		this.storeAreasRegistered = storeAreasRegistered;
+	}
+
 		
 }

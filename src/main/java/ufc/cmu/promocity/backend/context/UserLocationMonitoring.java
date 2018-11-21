@@ -21,6 +21,7 @@ public class UserLocationMonitoring{
 	private PromotionArea promotionArea;
 	private CouponsSent couponsSent;
 	private double radius=1;
+	private long idStore=0;
 	
 	public UserLocationMonitoring(PromotionArea promotionArea) {
 		this.promotionArea = promotionArea;
@@ -38,12 +39,14 @@ public class UserLocationMonitoring{
 			double userDistance = new GeographicArea().distance(element.getLatitude(), element.getLongitude(), user.getLatitude(), user.getLongitude());
 			 
 			//Veriica se o usuário ainda NÃO recebeu cupom dessa loja
-			boolean checkCoupon = userAlreadyPromotionStore(element.getId(), user.getId()); 
+			boolean checkCoupon = userNoReceivedPromotionStore(element.getId(), user.getId()); 
 			
-			//se for maior que 1 (km) dispara uma mensagem para o usuario com a promocao da loja
+			//se for menor que 1 (km) dispara uma mensagem para o usuario com a promocao da loja
+			//também adiciona este(s) cupom(s) no referido usuário
 			if (userDistance < radius && checkCoupon) {
 				//recupera a promocao/cupom da loja
-				//envia mensagem para usuario com o cupom da promocao
+				//envia mensagem para usuario com o cupom da promocao	
+				setIdStore(element.getId());
 				Object coupon = "Cupom teste da loja " + element.getName(); 
 				Object content = "Conteudo teste";
 				new Messenger().sendPromotion(String.valueOf(user.getId()) + user.getUsername(), coupon, content);
@@ -52,7 +55,7 @@ public class UserLocationMonitoring{
 		
 	}
 	
-	private boolean userAlreadyPromotionStore(Long idStore, Long idUser) {
+	private boolean userNoReceivedPromotionStore(Long idStore, Long idUser) {
 		boolean newCoupon=false;
 		//TODO falta implementar a regra...
 		//checa se o usuário já recebeu uma promocao da loja
@@ -75,6 +78,14 @@ public class UserLocationMonitoring{
 
 	public void setPromotionArea(PromotionArea promotionArea) {
 		this.promotionArea = promotionArea;
+	}
+
+	public long getIdStore() {
+		return idStore;
+	}
+
+	public void setIdStore(Long long1) {
+		this.idStore = long1;
 	}
 
 }

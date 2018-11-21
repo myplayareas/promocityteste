@@ -17,18 +17,23 @@ public class PrincipalController {
 	private ReportApplication listDetalhes = new ReportApplication();
 	
 	String u1 = "http://localhost:8082/promocity/users";
-	String u2 = "http://localhost:8082/promocity/users/idUser";
-	String u3 = "http://localhost:8082/promocity/users/idUser/coupons";
+	String u2 = "http://localhost:8082/promocity/users/{idUser}";
+	String u3 = "http://localhost:8082/promocity/users/{idUser}/coupons";
+	String u4 = "http://localhost:8082/promocity/users/{idUser}/location/{latitude}/{longitude}";
 	
 	String s1 = "http://localhost:8082/promocity/stores";
-	String s2 = "http://localhost:8082/promocity/stores/idStore/promotions";
-	String s3 = "http://localhost:8082/promocity/stores/idStore/promotions/idPromotion";
-	String s4 = "http://localhost:8082/promocity/stores/idStore/reportpromotions/idPromotion";
-	String s5 = "http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/coupons";
-	String s6 = "http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/coupons/idCoupon";
-	String s7 = "http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/reportcoupons/idCoupon";
+	String s2 = "http://localhost:8082/promocity/stores/{idStore}/promotions";
+	String s3 = "http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}";
+	String s4 = "http://localhost:8082/promocity/stores/{idStore}/reportpromotions/{idPromotion}";
+	String s5 = "http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons";
+	String s6 = "http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons/{idCoupon}";
+	String s7 = "http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/reportcoupons/{idCoupon}";
 
 	public PrincipalController() {		
+		this.listDetalhes.addDetalhe(u1);
+		this.listDetalhes.addDetalhe(u2);
+		this.listDetalhes.addDetalhe(u3);
+		this.listDetalhes.addDetalhe(u4);
 		this.listDetalhes.addDetalhe(s1);
 		this.listDetalhes.addDetalhe(s2);
 		this.listDetalhes.addDetalhe(s3);
