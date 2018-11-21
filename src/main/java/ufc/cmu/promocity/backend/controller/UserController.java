@@ -140,10 +140,21 @@ public class UserController {
         
         long idStore = userLocationMonitoring.getIdStore();
         List<Promotion> promotionList = storeService.get(idStore).getPromotionList();
+        List<Coupon> couponList = new LinkedList<Coupon>();
         
         if (idStore != 0) {
         	//envia mensagem para o usuário
-        	System.out.println("O usuário " + id + " acaba de receber os cupons das promoções da Loja " + idStore);        	
+        	System.out.println("O usuário " + id + " acaba de receber os cupons das promoções da Loja " + idStore);
+        	
+        	//pupula a lista de cupons no usuário id
+            for (Promotion element : promotionList) {
+            	for (Coupon coupon : element.getCoupons()) {
+            		couponList.add(coupon);
+            	}
+            }
+            user.setCouponList(couponList);
+            userService.save(user);
+            
         }else {
         	return null;
         }
