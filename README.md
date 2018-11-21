@@ -56,14 +56,17 @@ http://localhost:8082/promocity
 
 mostra os seguintes recursos disponíveis
 
-"http://localhost:8082/promocity/stores",
-"http://localhost:8082/promocity/stores/idStore/promotions",
-"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion",
-"http://localhost:8082/promocity/stores/idStore/reportpromotions/idPromotion",
-"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/coupons",
-"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/coupons/idCoupon",
-"http://localhost:8082/promocity/stores/idStore/promotions/idPromotion/reportcoupons/idCoupon"
-
+"http://localhost:8082/promocity/users"
+"http://localhost:8082/promocity/users/{idUser}"
+"http://localhost:8082/promocity/users/{idUser}/coupons"
+"http://localhost:8082/promocity/users/{idUser}/location/{latitude}/{longitude}"
+"http://localhost:8082/promocity/stores"
+"http://localhost:8082/promocity/stores/{idStore}/promotions"
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}"
+"http://localhost:8082/promocity/stores/{idStore}/reportpromotions/{idPromotion}"
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons"
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons/{idCoupon}"
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/reportcoupons/{idCoupon}"
 
 Referências
 ---
