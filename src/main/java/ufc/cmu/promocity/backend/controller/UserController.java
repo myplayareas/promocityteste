@@ -7,6 +7,8 @@ import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.UsersService;
+import ufc.cmu.promocity.backend.utils.GeradorSenha;
+import ufc.cmu.promocity.backend.utils.Message;
 
 import java.net.URI;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 /**
  * Users Controller
@@ -210,6 +213,36 @@ public class UserController {
     	}
     	
     	return null;
+    }
+    
+    /**
+     * Dado email e senha retorna o JSON dos dados do usuario
+     * @param 
+     * @return código http
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/{email}/{senha}")
+    public Object getUserAutenticado(@PathParam("email") String email,@PathParam("senha") String senha) {
+    	Users user = userService.getUserByEmail(email);
+    	Message message = new Message();
+    	
+    	//consulta o usuário por email e se existe retorna os dados do usuário
+    	if (user != null) { //usuário existe
+    		boolean checaSenha = new GeradorSenha().comparaSenhas(senha, user.getPassword());
+        	if (senha.length() >0 && checaSenha){        		
+                return user;	
+        	}else{        		
+        		message.setId(1);
+        		message.setConteudo("Senha incorreta!");
+                return message;	    		
+        	}    	
+    		
+    	}else {
+    		message.setId(2);
+    		message.setConteudo("Usuário não existe!");
+    		return message;
+    	}    	
     }
     
 }

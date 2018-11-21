@@ -25,4 +25,13 @@ public class UsersService extends AbstractService<Users, Long>{
 	protected JpaRepository<Users, Long> getRepository(){
 		return usersRepository;
 	}
+	
+	public Users getUserByUserName(String username) {
+		return usersRepository.findByUsername(username);
+	}
+	
+	public Users getUserByEmail(String email) {
+		return usersRepository.findByEmail(email);
+	}
+	
 }
