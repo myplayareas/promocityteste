@@ -77,4 +77,8 @@ Referências
 
 [3] Jersey. It is an open source RESTful Web Services framework to facilitate development of RESTful Web services and their clients in Java, a standard and portable JAX-RS API. Availale at https://jersey.github.io 
 
+[4] Spring Data JPA. Abstartion of data access. Available at https://docs.spring.io/spring-data/jpa/docs/current/reference/html
+
+[5] Mysql 5. Database Management System. Available at https://dev.mysql.com/downloads/mysql
+
 Dúvidas, questionamentos ou sugestões enviar email para armando@ufpi.edu.br
