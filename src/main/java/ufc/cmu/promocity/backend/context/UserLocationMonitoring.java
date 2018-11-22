@@ -1,5 +1,6 @@
 package ufc.cmu.promocity.backend.context;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import ufc.cmu.promocity.backend.model.Store;
@@ -21,7 +22,7 @@ public class UserLocationMonitoring{
 	private PromotionArea promotionArea;
 	private CouponsSent couponsSent;
 	private double radius=1;
-	private long idStore=0;
+	private List<Long> idStoreList;
 	
 	public UserLocationMonitoring(PromotionArea promotionArea) {
 		this.promotionArea = promotionArea;
@@ -33,6 +34,7 @@ public class UserLocationMonitoring{
 	 */
 	public void checkNearby(Users user) {
 		List<Store> listOfStoreRegistered = this.promotionArea.getStoreAreasRegistered();
+		List<Long> listaIdLojasProximas = new LinkedList<>();
 		
 		for (Store element : listOfStoreRegistered) {				
 			//calcula a distancia entre a localizacao do usuario e da localizacao
@@ -45,14 +47,14 @@ public class UserLocationMonitoring{
 			//também adiciona este(s) cupom(s) no referido usuário
 			if (userDistance < radius && checkCoupon) {
 				//recupera a promocao/cupom da loja
-				//envia mensagem para usuario com o cupom da promocao	
-				setIdStore(element.getId());
+				//envia mensagem para usuario com o cupom da promocao				
+				listaIdLojasProximas.add(element.getId());			
 				Object coupon = "Cupom teste da loja " + element.getName(); 
 				Object content = "Conteudo teste";
 				new Messenger().sendPromotion(String.valueOf(user.getId()) + user.getUsername(), coupon, content);
 			}
 		}
-		
+		this.setIdStoreList(listaIdLojasProximas);
 	}
 	
 	private boolean userNoReceivedPromotionStore(Long idStore, Long idUser) {
@@ -80,12 +82,12 @@ public class UserLocationMonitoring{
 		this.promotionArea = promotionArea;
 	}
 
-	public long getIdStore() {
-		return idStore;
+	public List<Long> getIdStoreList() {
+		return idStoreList;
 	}
 
-	public void setIdStore(Long long1) {
-		this.idStore = long1;
+	public void setIdStoreList(List<Long> idStoreList) {
+		this.idStoreList = idStoreList;
 	}
 
 }
