@@ -130,8 +130,11 @@ public class UserController {
     @Produces("application/json")
     @Path("{id}/location/{latitude}/{longitude}")
     public List<Promotion> updateUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
-    	Users user = userService.get(Long.parseLong(id));
+    	List<Coupon> couponList = new LinkedList<Coupon>();
+    	List<Promotion> promotionList = new LinkedList<Promotion>();
+    	List<Promotion> allPromotionsList = new LinkedList<Promotion>();
     	
+    	Users user = userService.get(Long.parseLong(id));
     	user.setLatitude(Double.valueOf(latitude));
     	user.setLongitude(Double.valueOf(longitude));
     	
@@ -141,27 +144,29 @@ public class UserController {
     	
         userLocationMonitoring.checkNearby(user);
         
-        long idStore = userLocationMonitoring.getIdStore();
-        List<Promotion> promotionList = storeService.get(idStore).getPromotionList();
-        List<Coupon> couponList = new LinkedList<Coupon>();
+        List<Long> idStoreList = userLocationMonitoring.getIdStoreList();
         
-        if (idStore != 0) {
-        	//envia mensagem para o usuário
-        	System.out.println("O usuário " + id + " acaba de receber os cupons das promoções da Loja " + idStore);
-        	
-        	//pupula a lista de cupons no usuário id
-            for (Promotion element : promotionList) {
-            	for (Coupon coupon : element.getCoupons()) {
-            		couponList.add(coupon);
-            	}
+        if (idStoreList.size() > 0) {
+            //percorre as lojas que o usuário ficou próximo
+            for (Long idStore : idStoreList) {
+            	promotionList = storeService.get(idStore).getPromotionList();
+            	//pupula a lista de cupons no usuário
+            	for (Promotion element : promotionList) {
+            		allPromotionsList.add(element);
+            		for (Coupon coupon : element.getCoupons()) {
+            			couponList.add(coupon);
+            		}
+            	}            	
             }
+            //envia mensagem para o usuário
+        	System.out.println("O usuário " + id + " acaba de receber os cupons das promoções das Lojas registradas ");
             user.setCouponList(couponList);
             userService.save(user);
-            
-        }else {
-        	return null;
+            return allPromotionsList;
         }
-        return promotionList;
+        else {
+        	return null;
+        }        
     }
     
     /**
