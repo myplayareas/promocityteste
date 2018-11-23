@@ -20,6 +20,10 @@ public class PrincipalController {
 	String u2 = "http://localhost:8082/promocity/users/{idUser}";
 	String u3 = "http://localhost:8082/promocity/users/{idUser}/coupons";
 	String u4 = "http://localhost:8082/promocity/users/{idUser}/location/{latitude}/{longitude}";
+	String u5 = "http://localhost:8082/promocity/users/{email}/{senha}";
+	String u6 = "http://localhost:8082/promocity/users/{idUser}/add/friend/{idFriend}";
+	String u7 = "http://localhost:8082/promocity/users/{idUser}/list/friends";
+	String u8 = "http://localhost:8082/promocity/users/{idUser}/delete/friend/{idFriend}";
 	
 	String s1 = "http://localhost:8082/promocity/stores";
 	String s2 = "http://localhost:8082/promocity/stores/{idStore}/promotions";
@@ -33,7 +37,11 @@ public class PrincipalController {
 		this.listDetalhes.addDetalhe(u1);
 		this.listDetalhes.addDetalhe(u2);
 		this.listDetalhes.addDetalhe(u3);
-		this.listDetalhes.addDetalhe(u4);
+		this.listDetalhes.addDetalhe(u4);		
+		this.listDetalhes.addDetalhe(u5);
+		this.listDetalhes.addDetalhe(u6);
+		this.listDetalhes.addDetalhe(u7);
+		this.listDetalhes.addDetalhe(u8);
 		this.listDetalhes.addDetalhe(s1);
 		this.listDetalhes.addDetalhe(s2);
 		this.listDetalhes.addDetalhe(s3);
