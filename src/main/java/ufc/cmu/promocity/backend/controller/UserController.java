@@ -249,5 +249,79 @@ public class UserController {
     		return message;
     	}    	
     }
+
+    @GET
+    @Produces("application/json")
+    @Path(value = "/{idUser}/add/friend/{idFriend}")
+    public Object addFriend(@PathParam("idUser") long idUser, @PathParam("idFriend") long idFriend) {
+    	Message message = new Message();
+    	
+    	Users user = this.userService.get(idUser);
+    	Users friend = this.userService.get(idFriend);
+    	
+    	if (user.addIdFriend(friend)) {
+    		this.userService.save(user);
+    		message.setId(1);
+    		message.setConteudo("O amigo foi salvo com sucesso.");
+    	}else {
+    		message.setId(2);
+    		message.setConteudo("O amigo já existe!!!!.");
+    	}
+    	
+    	return message;	
+    }
+    
+    /**
+     * Dado um usuário logado lista os amigos dele
+     * @param idUser
+     * @param model
+     * @return
+     */
+    @GET
+    @Produces("application/json")
+    @Path(value = "/{idUser}/list/friends")
+    public List<Users> listFriends(@PathParam("idUser") long idUser) {    
+
+		Users user = this.userService.get(idUser);
+		List<Users> idFriends = user.getIdFriendsList();
+		
+		List<Users> listaAmigos = new LinkedList<Users>();
+		
+		for (Users id : idFriends) {
+			listaAmigos.add(this.userService.get(id.getId()));
+		}
+        
+        return listaAmigos;
+    }
+    
+    /**
+     * Dado um usuário logado, ele remove o amigo selcionado
+     * @param idUser
+     * @param idFriend
+     * @param model
+     * @param ra
+     * @return
+     */
+    @GET
+    @Produces("application/json")
+    @Path(value = "/{idUser}/delete/friend/{idFriend}")
+    public Object deleteFriend(@PathParam("idUser") long idUser, @PathParam("idFriend") long idFriend) {
+    	Message message = new Message();
+    	
+    	Users user = this.userService.get(idUser);
+    	Users friend = this.userService.get(idFriend);
+    	
+    	if (user.deleteFriend(friend)) {        	 
+        	this.userService.save(user);
+        	message.setId(1);
+        	message.setConteudo("Amigo removido com sucesso!");
+    	}else {
+        	message.setId(1);
+        	message.setConteudo("O amigo não foi removido.");
+    	}
+    	
+    	return message;
+    }
+    
     
 }
