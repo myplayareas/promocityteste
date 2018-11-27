@@ -49,10 +49,13 @@ public class Users extends AbstractModel<Long>{
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JsonBackReference
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
  	private List<Users> idFriendsList = new LinkedList<Users>();
 	
+	private String completename;
+	
 	public Users() {
+		this.idFriendsList = new LinkedList<Users>();
 	}
 	
 	public Users(String username, String password, String email) {
@@ -124,61 +127,77 @@ public class Users extends AbstractModel<Long>{
 	public void addCoupon(Coupon coupon) {
 		this.couponList.add(coupon);
 	}
+
+	/**
+	 * Lista todos os ids dos amigos
+	 * @return List<Long>
+	 */
+	public List<Users> getIdFriendsList() {
+		return idFriendsList;
+	}
+
+	/**
+	 * Atualiza a lista de Ids de amigos
+	 * @param idFriendsList
+	 */
+	public void setIdFriendsList(List<Users> idFriendsList) {
+		this.idFriendsList = idFriendsList;
+	}
 	
 	/**
- 	 * Lista todos os ids dos amigos
- 	 * @return List<Long>
- 	 */
- 	public List<Users> getIdFriendsList() {
- 		return idFriendsList;
- 	}
+	 * Adiciona um novo id de amigo
+	 * @param idFriend
+	 */
+	public boolean addIdFriend(Users idFriend) {
+		if (!alreadyFriend(idFriend)) {
+			this.idFriendsList.add(idFriend);	
+			return true;
+		}else {
+			return false;
+		} 
+	}
+	
+	public boolean alreadyFriend(Users idFriend) {
+		//percorre a lista de amigos e checa se o amigo já está nela
+		for (Users idUser : this.idFriendsList) {
+			if (idUser.getId() == idFriend.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteFriend(Users idFriend) {		
+		//pega a lista de amigos
+		List<Users> listaAux = this.getIdFriendsList();
+		int tamanhoListaAux = listaAux.size();
+		boolean achou=false;
+		//encontra o indice do usuario a ser removido
+		for (int i=0; i < tamanhoListaAux; i++) {
+			if (listaAux.get(i).getId() == idFriend.getId()) {			
+				this.idFriendsList.remove(i);
+				achou=true;
+				break;
+			}
+		}
+		
+		return achou;
+	}
+	
+	public int getAmountOfCoupons() {
+		return this.getCouponList().size();
+	}
 
- 	/**
- 	 * Atualiza a lista de Ids de amigos
- 	 * @param idFriendsList
- 	 */
- 	public void setIdFriendsList(List<Users> idFriendsList) {
- 		this.idFriendsList = idFriendsList;
- 	}
- 	
- 	/**
- 	 * Adiciona um novo id de amigo
- 	 * @param idFriend
- 	 */
- 	public boolean addIdFriend(Users idFriend) {
- 		if (!alreadyFriend(idFriend)) {
- 			this.idFriendsList.add(idFriend);	
- 			return true;
- 		}else {
- 			return false;
- 		} 
- 	}
- 	
- 	public boolean alreadyFriend(Users idFriend) {
- 		//percorre a lista de amigos e checa se o amigo já está nela
- 		for (Users idUser : this.idFriendsList) {
- 			if (idUser.getId() == idFriend.getId()) {
- 				return true;
- 			}
- 		}
- 		return false;
- 	}
- 	
- 	public boolean deleteFriend(Users idFriend) {		
- 		//pega a lista de amigos
- 		List<Users> listaAux = this.getIdFriendsList();
- 		int tamanhoListaAux = listaAux.size();
- 		boolean achou=false;
- 		//encontra o indice do usuario a ser removido
- 		for (int i=0; i < tamanhoListaAux; i++) {
- 			if (listaAux.get(i).getId() == idFriend.getId()) {			      
- 				this.idFriendsList.remove(i);
- 				achou=true;
- 				break;
- 			}
- 		}
- 		
- 		return achou;
- 	}
+	public int getAmountOfFriends() {
+		return this.getIdFriendsList().size();
+	}
+
+	public String getCompletename() {
+		return completename;
+	}
+
+	public void setCompletename(String completename) {
+		this.completename = completename;
+	}
 	
 }

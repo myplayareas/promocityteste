@@ -5,6 +5,7 @@ import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Users;
+import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.UsersService;
 import ufc.cmu.promocity.backend.utils.GeradorSenha;
@@ -39,7 +40,13 @@ public class UserController {
 	private UsersService userService;
 	private UserLocationMonitoring userLocationMonitoring;
 	public PromotionArea globalPromotionArea;
-	private StoreService storeService;
+	private StoreService storeService;	
+	private MyStoresService myStoresService;
+
+	@Autowired
+	public void setMyStoresService(MyStoresService myStoresService) {
+	 		this.myStoresService = myStoresService;
+	}
 	
 	@Autowired
 	public void setUserService(UsersService userServices){
