@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ufc.cmu.promocity.backend.context.PromotionArea;
@@ -22,7 +23,9 @@ import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
 import ufc.cmu.promocity.backend.report.ReportCoupon;
 import ufc.cmu.promocity.backend.report.ReportPromotion;
+import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.StoreService;
+import ufc.cmu.promocity.backend.service.UsersService;
 
 /**
  * Stores Controller
@@ -32,7 +35,19 @@ import ufc.cmu.promocity.backend.service.StoreService;
 @Path("/stores")
 public class StoreController {
 	private StoreService storeService;
-	public PromotionArea globalPromotionArea;
+	public PromotionArea globalPromotionArea;	
+	private MyStoresService myStoresService;
+	private UsersService userService;
+
+	@Autowired
+	public void setMyStoresService(MyStoresService myStoresService) {
+	 		this.myStoresService = myStoresService;
+	}
+
+	 @Autowired
+     public void setUserService(UsersService userService) {	
+     	this.userService = userService;		     	
+     }		     
 	
 	/**
 	 * Contrutor of StoreController
