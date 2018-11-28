@@ -19,7 +19,7 @@ public class PrincipalController {
 	String u1 = "http://localhost:8082/promocity/users";
 	String u2 = "http://localhost:8082/promocity/users/{idUser}";
 	String u3 = "http://localhost:8082/promocity/users/{idUser}/coupons";
-	String u4 = "http://localhost:8082/promocity/users/{idUser}/location/{latitude}/{longitude}";
+	String u4 = "http://localhost:8082/promocity/users/{idUser}/monitoring/location/{latitude}/{longitude}";
 	String u5 = "http://localhost:8082/promocity/users/{email}/{senha}";
 	String u6 = "http://localhost:8082/promocity/users/{idUser}/add/friend/{idFriend}";
 	String u7 = "http://localhost:8082/promocity/users/{idUser}/list/friends";

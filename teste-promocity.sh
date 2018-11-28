@@ -8,7 +8,7 @@ curl http://localhost:8082/promocity/stores > lista-lojas.json &&
 curl http://localhost:8082/promocity/promotions > lista-promocoes.json &&
 curl http://localhost:8082/promocity/coupons > lista-cupons.json &&
 curl http://localhost:8082/promocity/users/armando@ufpi.edu.br/armando > retorna-dados-usuario-autenticado.json &&
-curl http://localhost:8082/promocity/users/1/location/0.0/0.0 > retorna-promocoes-usuario-localizacao.json &&
+curl http://localhost:8082/promocity/users/1/monitoring/location/0.0/0.0 > retorna-promocoes-usuario-localizacao.json &&
 curl http://localhost:8082/promocity/users/1/coupons > retorna-cupons-usuario.json &&
 curl http://localhost:8082/promocity/users/1/list/friends > retorna-amigos-usuario.json
 

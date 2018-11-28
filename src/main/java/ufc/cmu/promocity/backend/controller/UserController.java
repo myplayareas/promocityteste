@@ -329,6 +329,9 @@ public class UserController {
     	
     	if (user.addIdFriend(friend)) {
     		this.userService.save(user);
+    		if (friend.addIdFriend(user)){
+    			this.userService.save(friend);	
+    		}    
     		message.setId(1);
     		message.setConteudo("O amigo foi salvo com sucesso.");
     	}else {
@@ -381,6 +384,9 @@ public class UserController {
     	
     	if (user.deleteFriend(friend)) {        	 
         	this.userService.save(user);
+        	if(friend.deleteFriend(user)) {
+        		this.userService.save(friend);
+        	}
         	message.setId(1);
         	message.setConteudo("Amigo removido com sucesso!");
     	}else {
