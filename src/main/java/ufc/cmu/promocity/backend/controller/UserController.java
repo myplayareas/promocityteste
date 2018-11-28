@@ -5,6 +5,7 @@ import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Users;
+import ufc.cmu.promocity.backend.report.ReportCoupon;
 import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.UsersService;
@@ -133,6 +134,19 @@ public class UserController {
      * @param longitude
      * @return código http
      */
+    /** 
+     *
+     ** @deprecated  Esse método não deve ser mais utilizado, pois a forma de checar o contexto de proximidade do usuário em relaçaõ a loja mudou <br/>
+     *              {will be removed in next version} <br/>
+     *              	use {@link #monitoringUserLocation()} instead like this: 
+     * 
+     * <blockquote><pre>
+     * monitoringUserLocation(id, latitude, longitude)
+     * </pre></blockquote>
+     *
+     * @deprecated use {@link #new()} instead.  
+     */
+    @Deprecated
     @GET
     @Produces("application/json")
     @Path("{id}/location/{latitude}/{longitude}")
@@ -175,7 +189,54 @@ public class UserController {
         	return null;
         }        
     }
-    
+
+    /**
+     * requisicao do servico via PUT
+     * ../1/location/0/0
+     * exemplo dados enviados em forma de json: 
+     * {
+  		"id": 1,
+  		"latitude": 0,
+  		"longitude": 0
+		}
+     * Dado um id, latitude e longitude de um usuário envia sua localização instantanea
+     * @param id
+     * @param latitude
+     * @param longitude
+     * @return código http
+     */
+    @GET
+    @Produces("application/json")
+    @Path("{id}/monitoring/location/{latitude}/{longitude}")
+    public List<ReportCoupon> monitoringUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
+    	List<Coupon> couponList = new LinkedList<Coupon>();
+    	List<ReportCoupon> cuponsDetalhados = new LinkedList<ReportCoupon>();
+    	
+    	Users user = userService.get(Long.parseLong(id));
+    	user.setLatitude(Double.valueOf(latitude));
+    	user.setLongitude(Double.valueOf(longitude));
+    	
+	    this.globalPromotionArea = PromotionArea.getInstance();
+	    this.globalPromotionArea.setStoreAreasRegistered(this.storeService.getListAll());
+	    this.userLocationMonitoring.setPromotionArea(globalPromotionArea);
+    	
+	    userLocationMonitoring.checkUserContext(user);
+        
+	    couponList = userLocationMonitoring.getListaDeCuponsColetados();
+	    cuponsDetalhados = userLocationMonitoring.getListaDeReportCupomColetados();
+	            
+        if (couponList.size() > 0) {
+        	for (Coupon cupom : couponList) {
+        		user.addCoupon(cupom);
+        	}        	
+            userService.save(user);
+            return cuponsDetalhados;
+        }
+        else {
+        	return null;
+        }        
+    }
+
     /**
      * Dado um id de um usuario faz sua remocao do repositorio
      * @param id

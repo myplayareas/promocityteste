@@ -125,7 +125,9 @@ public class Users extends AbstractModel<Long>{
 	}
 
 	public void addCoupon(Coupon coupon) {
-		this.couponList.add(coupon);
+		if (!this.alreadyCoupon(coupon)) {
+			this.couponList.add(coupon);
+		}
 	}
 
 	/**
@@ -199,5 +201,16 @@ public class Users extends AbstractModel<Long>{
 	public void setCompletename(String completename) {
 		this.completename = completename;
 	}
+
+	public boolean alreadyCoupon(Coupon idCoupon) {
+		//percorre a lista de cupons e checa se o cupom já está nela
+		for (Coupon element : this.couponList) {
+			if (element.getId() == idCoupon.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	
 }
