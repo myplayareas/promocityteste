@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -51,7 +50,7 @@ public class Users extends AbstractModel<Long>{
 	@JsonBackReference
 	@ManyToMany(fetch = FetchType.LAZY)
  	private List<Users> idFriendsList = new LinkedList<Users>();
-	
+		
 	private String completename;
 	
 	public Users() {
@@ -211,6 +210,5 @@ public class Users extends AbstractModel<Long>{
 		}
 		return false;
 	}
-
-	
+		
 }

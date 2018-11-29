@@ -3,20 +3,27 @@ package ufc.cmu.promocity.backend.controller;
 import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
 import ufc.cmu.promocity.backend.model.Coupon;
+import ufc.cmu.promocity.backend.model.MyTracking;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
+import ufc.cmu.promocity.backend.model.Track;
 import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.report.ReportCoupon;
 import ufc.cmu.promocity.backend.service.CouponsService;
 import ufc.cmu.promocity.backend.service.MyStoresService;
+import ufc.cmu.promocity.backend.service.MyTrackingService;
 import ufc.cmu.promocity.backend.service.StoreService;
+import ufc.cmu.promocity.backend.service.TrackService;
 import ufc.cmu.promocity.backend.service.UsersService;
 import ufc.cmu.promocity.backend.utils.GeradorSenha;
+import ufc.cmu.promocity.backend.utils.ManipuladorDatas;
 import ufc.cmu.promocity.backend.utils.Message;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -47,6 +54,18 @@ public class UserController {
 	private StoreService storeService;	
 	private MyStoresService myStoresService;	
 	private CouponsService couponService;
+	private MyTrackingService myTrackingService;
+	private TrackService trackService;
+
+	@Autowired
+	public void setTrackService(TrackService trackService) {
+		this.trackService = trackService;
+	}
+
+	@Autowired
+	public void setMyTrackingService(MyTrackingService myTrackingService) {
+		this.myTrackingService = myTrackingService;
+	}
 	
 	@Autowired
 	public void setCouponService(CouponsService couponServices){
@@ -148,8 +167,23 @@ public class UserController {
     public List<ReportCoupon> monitoringUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
     	List<Coupon> couponList = new LinkedList<Coupon>();
     	List<ReportCoupon> cuponsDetalhados = new LinkedList<ReportCoupon>();
-    	
+    	MyTracking myTrack = new MyTracking();
+    		
     	Users user = userService.get(Long.parseLong(id));
+		
+		myTrack.setUser(user);
+		
+    	Track positionDay = new Track();
+    	Date day = new ManipuladorDatas().getCurrentDate();
+    	
+    	positionDay.setLatitude(Double.valueOf(latitude));
+    	positionDay.setLongitude(Double.valueOf(longitude));
+    	positionDay.setDay(day);
+    	this.trackService.save(positionDay);
+    	
+		myTrack.getTrackingList().add(positionDay);
+		this.myTrackingService.save(myTrack);
+
     	user.setLatitude(Double.valueOf(latitude));
     	user.setLongitude(Double.valueOf(longitude));
     	
@@ -411,7 +445,26 @@ public class UserController {
     	}
     	return message;
 	}
-     
+ 
+	/**
+     * Dado um usuário logado lista os amigos dele
+     * @param idUser
+     * @param model
+     * @return
+     */
+    @GET
+    @Produces("application/json")
+    @Path(value = "/{idUser}/list/tracks")
+    public List<Track> listTrackingUser(@PathParam("idUser") long idUser) {    
+
+		Users user = this.userService.get(idUser);
+		MyTracking myTracking = this.myTrackingService.getMyTrackingByUser(user);	
+		
+		List<Track> lista = myTracking.getTrackingList();	
+		
+        return lista;
+    }
+	
     /**
      * Checa se o usuário está nas proximidades da loja dada
      * @param idUser
@@ -430,8 +483,6 @@ public class UserController {
     	}
     	
     	return valid;
-    }
-    
-    
+    }        
     
 }
