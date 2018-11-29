@@ -33,47 +33,7 @@ public class UserLocationMonitoring{
 	public UserLocationMonitoring(PromotionArea promotionArea) {
 		this.promotionArea = promotionArea;
 	}
-	
-	/**
-	 * Checa a proximidade do usuario dentro de uma lista de areas de promocoes
-	 * @param userLocation
-	 * 
-    /**@deprecated  Esse método não deve ser mais utilizado, pois a forma de checar o contexto de proximidade do usuário em relação a loja mudou <br/>
-    *              {will be removed in next version} <br/>
-    *              	use {@link #checkUserContext(Users user)} instead like this: 
-    * 
-    * <blockquote><pre>
-    * checkUserContext(Users user)
-    * </pre></blockquote>
-    *
-    * @deprecated use {@link #new()} instead.  
-    */
-   @Deprecated
-	public void checkNearby(Users user) {
-		List<Store> listOfStoreRegistered = this.promotionArea.getStoreAreasRegistered();
-		List<Long> listaIdLojasProximas = new LinkedList<>();
 		
-		for (Store element : listOfStoreRegistered) {				
-			//calcula a distancia entre a localizacao do usuario e da localizacao
-			double userDistance = new GeographicArea().distance(element.getLatitude(), element.getLongitude(), user.getLatitude(), user.getLongitude());
-			 
-			//Veriica se o usuário ainda NÃO recebeu cupom dessa loja
-			boolean checkCoupon = userNoReceivedPromotionStore(element.getId(), user.getId()); 
-			
-			//se for menor que 1 (km) dispara uma mensagem para o usuario com a promocao da loja
-			//também adiciona este(s) cupom(s) no referido usuário
-			if (userDistance < radius && checkCoupon) {
-				//recupera a promocao/cupom da loja
-				//envia mensagem para usuario com o cupom da promocao				
-				listaIdLojasProximas.add(element.getId());			
-				Object coupon = "Cupom teste da loja " + element.getName(); 
-				Object content = "Conteudo teste";
-				new Messenger().sendPromotion(String.valueOf(user.getId()) + user.getUsername(), coupon, content);
-			}
-		}
-		this.setIdStoreList(listaIdLojasProximas);
-	}
-	
 	/**
 	 * Checa o contexto de proximidade do usuário em relação as lojas que tenham promoções ativas
 	 * @param user
@@ -88,8 +48,7 @@ public class UserLocationMonitoring{
 		//2 Para cada loja registrada com promoções verifica a proximidade do usuário
 		for (Store loja : listaDeLojasComPromocoesRegistradas) {	
 
-			//2.1 Checa se o usuário tá perto -> calcula a distancia entre a localizacao do usuario e da localizacao
-			double userDistance = new GeographicArea().distance(loja.getLatitude(), loja.getLongitude(), user.getLatitude(), user.getLongitude());
+			double userDistance = checkDistanceFromStore(user, loja);
 			
 			//2.1.1 usuário próximo -> se usuário estiver em um raio de 1km da loja 
 			if (userDistance < radius) {
@@ -121,20 +80,17 @@ public class UserLocationMonitoring{
 		this.setListaDeCuponsColetados(listaCuponsDaPromocaoDaLojaCorrente);				
 	}
 	
-    /**@deprecated  Esse método não deve ser mais utilizado, pois a forma de checar o contexto de proximidade do usuário em relação a loja mudou <br/>
-    *              {will be removed in next version} <br/>
-    *                            	  
-    * @deprecated use {@link #new()} instead.  
+   /**
+    * Calcula a distancia entre a localização do usuário e o centro do raio da localização da loja passada
+    * @param user
+    * @param element
+    * @return distancia em quilometros
     */
-   @Deprecated
-	private boolean userNoReceivedPromotionStore(Long idStore, Long idUser) {
-		boolean newCoupon=false;
-		//TODO falta implementar a regra...
-		//checa se o usuário já recebeu uma promocao da loja
-		newCoupon = true;
-		
-		return newCoupon;
+	public double checkDistanceFromStore(Users user, Store element) {		
+		double userDistance = new GeographicArea().distance(element.getLatitude(), element.getLongitude(), user.getLatitude(), user.getLongitude());
+		return userDistance;
 	}
+
 
 	public double getRadius() {
 		return radius;
