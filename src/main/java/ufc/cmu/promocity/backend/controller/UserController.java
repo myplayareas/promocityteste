@@ -4,8 +4,10 @@ import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.context.UserLocationMonitoring;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
+import ufc.cmu.promocity.backend.model.Store;
 import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.report.ReportCoupon;
+import ufc.cmu.promocity.backend.service.CouponsService;
 import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.UsersService;
@@ -42,7 +44,13 @@ public class UserController {
 	private UserLocationMonitoring userLocationMonitoring;
 	public PromotionArea globalPromotionArea;
 	private StoreService storeService;	
-	private MyStoresService myStoresService;
+	private MyStoresService myStoresService;	
+	private CouponsService couponService;
+	
+	@Autowired
+	public void setCouponService(CouponsService couponServices){
+		this.couponService = couponServices;
+	}
 
 	@Autowired
 	public void setMyStoresService(MyStoresService myStoresService) {
@@ -120,79 +128,7 @@ public class UserController {
     }
 
     /**
-     * requisicao do servico via PUT
-     * ../1/location/0/0
-     * exemplo dados enviados em forma de json: 
-     * {
-  		"id": 1,
-  		"latitude": 0,
-  		"longitude": 0
-		}
-     * Dado um id, latitude e longitude de um usuário envia sua localização instantanea
-     * @param id
-     * @param latitude
-     * @param longitude
-     * @return código http
-     */
-    /** 
-     *
-     ** @deprecated  Esse método não deve ser mais utilizado, pois a forma de checar o contexto de proximidade do usuário em relaçaõ a loja mudou <br/>
-     *              {will be removed in next version} <br/>
-     *              	use {@link #monitoringUserLocation()} instead like this: 
-     * 
-     * <blockquote><pre>
-     * monitoringUserLocation(id, latitude, longitude)
-     * </pre></blockquote>
-     *
-     * @deprecated use {@link #new()} instead.  
-     */
-    @Deprecated
-    @GET
-    @Produces("application/json")
-    @Path("{id}/location/{latitude}/{longitude}")
-    public List<Promotion> updateUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
-    	List<Coupon> couponList = new LinkedList<Coupon>();
-    	List<Promotion> promotionList = new LinkedList<Promotion>();
-    	List<Promotion> allPromotionsList = new LinkedList<Promotion>();
-    	
-    	Users user = userService.get(Long.parseLong(id));
-    	user.setLatitude(Double.valueOf(latitude));
-    	user.setLongitude(Double.valueOf(longitude));
-    	
-	    this.globalPromotionArea = PromotionArea.getInstance();
-	    this.globalPromotionArea.setStoreAreasRegistered(this.storeService.getListAll());
-	    this.userLocationMonitoring.setPromotionArea(globalPromotionArea);
-    	
-        userLocationMonitoring.checkNearby(user);
-        
-        List<Long> idStoreList = userLocationMonitoring.getIdStoreList();
-        
-        if (idStoreList.size() > 0) {
-            //percorre as lojas que o usuário ficou próximo
-            for (Long idStore : idStoreList) {
-            	promotionList = storeService.get(idStore).getPromotionList();
-            	//pupula a lista de cupons no usuário
-            	for (Promotion element : promotionList) {
-            		allPromotionsList.add(element);
-            		for (Coupon coupon : element.getCoupons()) {
-            			couponList.add(coupon);
-            		}
-            	}            	
-            }
-            //envia mensagem para o usuário
-        	System.out.println("O usuário " + id + " acaba de receber os cupons das promoções das Lojas registradas ");
-            user.setCouponList(couponList);
-            userService.save(user);
-            return allPromotionsList;
-        }
-        else {
-        	return null;
-        }        
-    }
-
-    /**
-     * requisicao do servico via PUT
-     * ../1/location/0/0
+     * ../1/monitoring/location/0/0
      * exemplo dados enviados em forma de json: 
      * {
   		"id": 1,
@@ -318,6 +254,12 @@ public class UserController {
     	}    	
     }
 
+    /**
+     * Adiciona um amigo de forma birecional
+     * @param idUser
+     * @param idFriend
+     * @return
+     */
     @GET
     @Produces("application/json")
     @Path(value = "/{idUser}/add/friend/{idFriend}")
@@ -332,10 +274,10 @@ public class UserController {
     		if (friend.addIdFriend(user)){
     			this.userService.save(friend);	
     		}    
-    		message.setId(1);
+    		message.setId(3);
     		message.setConteudo("O amigo foi salvo com sucesso.");
     	}else {
-    		message.setId(2);
+    		message.setId(4);
     		message.setConteudo("O amigo já existe!!!!.");
     	}
     	
@@ -366,7 +308,7 @@ public class UserController {
     }
     
     /**
-     * Dado um usuário logado, ele remove o amigo selcionado
+     * Dado um usuário logado, ele remove o amigo selecionado
      * @param idUser
      * @param idFriend
      * @param model
@@ -387,15 +329,119 @@ public class UserController {
         	if(friend.deleteFriend(user)) {
         		this.userService.save(friend);
         	}
-        	message.setId(1);
+        	message.setId(5);
         	message.setConteudo("Amigo removido com sucesso!");
     	}else {
-        	message.setId(1);
+        	message.setId(6);
         	message.setConteudo("O amigo não foi removido.");
     	}
     	
     	return message;
     }
+    
+    /**
+     * Ativa um cupom para os 3 amigos que tiverem o mesmo cupom e estivem na proximidade da loja
+     * @param idUser
+     * @param idCoupon
+     * @param idStore
+     * @param idFriend1
+     * @param idFriend2
+     * @return
+     */
+    @GET
+    @Produces("application/json")
+    @Path(value="/{idUser}/activate/coupon/{idCoupon}/store/{idStore}/friends/{idFriend1}/{idFriend2}")
+    public Object activeCouponFriends(@PathParam("idUser") long idUser, @PathParam("idCoupon") long idCoupon, @PathParam("idStore") long idStore, 
+    		@PathParam("idFriend1") long idFriend1, @PathParam("idFriend2") long idFriend2) {
+    	
+    	Users user = this.userService.get(idUser);
+    	Users friend1 = this.userService.get(idFriend1);
+    	Users friend2 = this.userService.get(idFriend2);
+    	Store store = this.storeService.get(idStore);
+    	Coupon myCoupon = this.couponService.get(idCoupon);
+    	    	
+    	return checkRulesActivateCoupon(user, friend1, friend2, store, myCoupon);
+    }
+
+    /**
+     * Checa as regras de validação de cupom por 3 amigos
+     * @param message
+     * @param user
+     * @param friend1
+     * @param friend2
+     * @param store
+     * @param myCoupon
+     * @return
+     */
+	private Object checkRulesActivateCoupon(Users user, Users friend1, Users friend2, Store store, Coupon myCoupon) {
+		Message message = new Message();
+		
+		//1. Checa validade do cupom idCoupon
+    	if (isValidCoupon(myCoupon)) {
+    		//2. Checa se Friend1 e Friend2 são amigos de user
+    		//3. Checa se Friend1 tem Coupon
+    		//4. Checa se Friend1 está na vizinhança de Store	
+    		//5. Checa se Friend2 tem Coupon			
+    		//6. Checa se Friend2 está na vizinhança de Store
+    		if (user.alreadyFriend(friend1) && user.alreadyFriend(friend2) &&
+    				friend1.alreadyCoupon(myCoupon) && isUserNearByStore(friend1, store) && 
+    				friend2.alreadyCoupon(myCoupon) && isUserNearByStore(friend2, store)) {
+        		//7. Ativa idCoupon para User, Friend1 e Friend2 com o dobro do desconto original
+    			float descontoOriginal = myCoupon.getDiscount();
+    			myCoupon.setDiscount(descontoOriginal*2);
+    			myCoupon.setActivated(true);
+    			this.couponService.save(myCoupon);
+        		message.setId(7);
+        		message.setConteudo("Você e seus amigos " + friend1.getId() + ", " + friend2.getId() + ", ativaram o cupom " + myCoupon.getId() +" com sucesso!");
+    		}else {
+        		message.setId(8);
+        		message.setConteudo("Seus amigos " + friend1.getId() + ", " + friend2.getId() + ", não estão na proximidade necessária para ativar o cupom");
+    		}
+    	}else {
+    		message.setId(9);
+    		message.setConteudo("O coupon "+ myCoupon.getId() + " não é válido." );
+    	}
+    	return message;
+	}
+ 
+    /**
+     * Checa se um cupom é valido
+     * @param IdCoupon
+     * @return
+     */
+    public boolean isValidCoupon(Coupon coupon) {
+    	boolean valid=false;    	    	    	
+    	Coupon myCoupon = this.couponService.get(coupon.getId());
+    	
+    	if (myCoupon != null) {
+    		valid = true;
+    	}else {
+    		valid = false;
+    	}
+    	
+    	return valid;
+    }
+    
+    /**
+     * Checa se o usuário está nas proximidades da loja dada
+     * @param idUser
+     * @param idStore
+     * @return
+     */
+    public boolean isUserNearByStore(Users user, Store store) {
+    	boolean valid=false;    	
+    	double distance = new UserLocationMonitoring(null).checkDistanceFromStore(user, store);
+    	double radius = new UserLocationMonitoring(null).getRadius();
+    	
+    	if (distance <= radius) {
+    		valid = true;
+    	}else {
+    		valid = false;
+    	}
+    	
+    	return valid;
+    }
+    
     
     
 }
