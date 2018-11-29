@@ -309,6 +309,8 @@ public class StoreController {
     				//Pode dar o desconto
     				message.setId(9);
     				message.setConteudo("Cupom premiado por amigos!, ele vale "+coupon.getDiscount()+" de desconto.");
+    				coupon.incrementUse();
+    				couponService.update(coupon);
     				return message;
     			}
     		}    		
@@ -320,7 +322,7 @@ public class StoreController {
 			message.setId(10);
 			message.setConteudo("Este cupom vale "+coupon.getDiscount()+" de desconto.");
 			coupon.incrementUse();
-			couponService.save(coupon);
+			couponService.update(coupon);;
     	}else {
 			message.setId(11);
 			message.setConteudo("Este cupom não tem mais validade.");
