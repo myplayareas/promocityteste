@@ -21,11 +21,15 @@ import ufc.cmu.promocity.backend.context.PromotionArea;
 import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
+import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.report.ReportCoupon;
 import ufc.cmu.promocity.backend.report.ReportPromotion;
+import ufc.cmu.promocity.backend.service.CouponsService;
 import ufc.cmu.promocity.backend.service.MyStoresService;
+import ufc.cmu.promocity.backend.service.PromotionsService;
 import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.UsersService;
+import ufc.cmu.promocity.backend.utils.Message;
 
 /**
  * Stores Controller
@@ -38,7 +42,19 @@ public class StoreController {
 	public PromotionArea globalPromotionArea;	
 	private MyStoresService myStoresService;
 	private UsersService userService;
-
+	private PromotionsService promotionService;
+	private CouponsService couponService;
+	
+	@Autowired
+	public void setPromotionService(PromotionsService promotionServices){
+		this.promotionService = promotionServices;
+	}
+	
+	@Autowired
+	public void setCouponService(CouponsService couponServices){
+		this.couponService = couponServices;
+	}
+	
 	@Autowired
 	public void setMyStoresService(MyStoresService myStoresService) {
 	 		this.myStoresService = myStoresService;
@@ -272,6 +288,44 @@ public class StoreController {
     	
     	return null;
     }
+    
+    @GET
+    @Produces("application/json")
+    @Path("/{idStore}/promotions/{idPromotion}/coupon/consume/{idCoupon}/users/{idUser}")   
+    public Object consumeCoupon(@PathParam("idStore") String idStore, @PathParam("idPromotion") String idPromotion, 
+    		@PathParam("idCoupon") String idCoupon, @PathParam("idUser") String idUser) {
 
+    	Message message = new Message();
+    	Store store = storeService.get(Long.parseLong(idStore));
+    	//Promotion promotion = this.promotionService.get(Long.parseLong("idPromotion"));
+    	Coupon coupon = couponService.get(Long.parseLong(idCoupon));
+    	Users user = userService.get(Long.parseLong(idUser));
+    		
+    	//checa se foi premiado por amigos
+    	if (coupon.isAwarded()) {
+    		//checa se o amigo está dentro da lista de amigos premiados no cupom
+    		for (Users usuarioPremiado : coupon.getUsers()) {
+    			if (usuarioPremiado.getId() == user.getId()) {
+    				//Pode dar o desconto
+    				message.setId(9);
+    				message.setConteudo("Cupom premiado por amigos!, ele vale "+coupon.getDiscount()+" de desconto.");
+    				return message;
+    			}
+    		}    		
+    	}
+    	
+    	//checa se o cupom é valido e a promocao ainda é válida...
+    	if (coupon.isValidCoupon()) {
+			//Pode dar o desconto
+			message.setId(10);
+			message.setConteudo("Este cupom vale "+coupon.getDiscount()+" de desconto.");
+			coupon.incrementUse();
+			couponService.save(coupon);
+    	}else {
+			message.setId(11);
+			message.setConteudo("Este cupom não tem mais validade.");
+    	}
+    	return message;
+    }
     
 }
