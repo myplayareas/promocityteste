@@ -29,6 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.support.CustomSQLExceptionTranslatorRegistrar;
 import org.springframework.stereotype.Component;
 
 
@@ -375,9 +376,10 @@ public class UserController {
      */
 	private Object checkRulesActivateCoupon(Users user, Users friend1, Users friend2, Store store, Coupon myCoupon) {
 		Message message = new Message();
+		List<Users> custumersAward = new LinkedList<Users>();
 		
 		//1. Checa validade do cupom idCoupon
-    	if (isValidCoupon(myCoupon)) {
+    	if (myCoupon.isValidCoupon()) {
     		//2. Checa se Friend1 e Friend2 são amigos de user
     		//3. Checa se Friend1 tem Coupon
     		//4. Checa se Friend1 está na vizinhança de Store	
@@ -388,8 +390,14 @@ public class UserController {
     				friend2.alreadyCoupon(myCoupon) && isUserNearByStore(friend2, store)) {
         		//7. Ativa idCoupon para User, Friend1 e Friend2 com o dobro do desconto original
     			float descontoOriginal = myCoupon.getDiscount();
+    			custumersAward.add(user);
+    			custumersAward.add(friend1);
+    			custumersAward.add(friend2);
+    			//8. O cupom fica exclusivo dos amigos que ativaram o cupom e não pode ser usado por outras pessoas.
     			myCoupon.setDiscount(descontoOriginal*2);
     			myCoupon.setActivated(true);
+    			myCoupon.setAwarded(true); 
+    			myCoupon.setUsers(custumersAward);    			
     			this.couponService.save(myCoupon);
         		message.setId(7);
         		message.setConteudo("Você e seus amigos " + friend1.getId() + ", " + friend2.getId() + ", ativaram o cupom " + myCoupon.getId() +" com sucesso!");
@@ -399,29 +407,11 @@ public class UserController {
     		}
     	}else {
     		message.setId(9);
-    		message.setConteudo("O coupon "+ myCoupon.getId() + " não é válido." );
+    		message.setConteudo("O coupon "+ myCoupon.getId() + " não é mais válido." );
     	}
     	return message;
 	}
- 
-    /**
-     * Checa se um cupom é valido
-     * @param IdCoupon
-     * @return
-     */
-    public boolean isValidCoupon(Coupon coupon) {
-    	boolean valid=false;    	    	    	
-    	Coupon myCoupon = this.couponService.get(coupon.getId());
-    	
-    	if (myCoupon != null) {
-    		valid = true;
-    	}else {
-    		valid = false;
-    	}
-    	
-    	return valid;
-    }
-    
+     
     /**
      * Checa se o usuário está nas proximidades da loja dada
      * @param idUser
