@@ -1,5 +1,9 @@
 # Promocity
-Serviço de promoções geolocalizadas. 
+Serviço ubíquo de promoções geolocalizadas. 
+
+A aplicação móvel fica disponível em https://github.com/juarezmeneses/PromoCityApp
+
+A aplicação web fica disponível em https://github.com/armandossrecife/syspromocity
 
 Features
 ---
