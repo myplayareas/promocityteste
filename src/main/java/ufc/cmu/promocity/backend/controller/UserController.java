@@ -456,13 +456,21 @@ public class UserController {
     @Produces("application/json")
     @Path(value = "/{idUser}/list/tracks")
     public List<Track> listTrackingUser(@PathParam("idUser") long idUser) {    
-
-		Users user = this.userService.get(idUser);
-		MyTracking myTracking = this.myTrackingService.getMyTrackingByUser(user);	
+    	List<Track> listaPosicoes = new LinkedList<Track>();
+    	
+		Users user = this.userService.get(idUser);		
 		
-		List<Track> lista = myTracking.getTrackingList();	
+		List<MyTracking> auxiliar = this.myTrackingService.getListAll();
 		
-        return lista;
+		for(MyTracking myTrack : auxiliar) {
+			if (myTrack.getUser().getId() == user.getId()) {
+				for(Track track : myTrack.getTrackingList()) {
+					listaPosicoes.add(track);
+				}
+			}
+		}
+		
+        return listaPosicoes;
     }
 	
     /**
