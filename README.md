@@ -26,27 +26,30 @@ Sobre as operações para execução da aplicação
 
 2. Crie o banco promocity.
 ```
-create database promocity
+mysql> create database promocity
 ```
-3. Rode o script security.sql para criar as tabelas users e authorities
 
-4. Rode o script populausers.sql para inserir o usuário armando (usuário armando/armando)
+3. Rode o script restaura-banco.sql para criar as tabelas com os dados de exemplo.
+```
+mysql> source scripts/sql/restaura-banco.sql
+```
 
-5. Limpe o projeto via comando clean do maven.
+4. Limpe o projeto via comando clean do maven.
 ```
 $mvn clean
 ```
-6. Compile o projeto via modo teste do maven. Com isso, as demais tabelas serão criadas e atualizadas. 
+
+5. Compile o projeto via modo teste do maven. 
 ```
 $mvn test
 ```
-7. Rode o script populadados.sql para popular com dados de exemplos. Para que sejam inseridos dados de exemplos para lojas, promoções e cupons. 
 
-8. Execute a classe principal (BackendApplication) do projeto via maven. 
+6. Execute a classe principal (BackendApplication) do projeto via maven. 
 ```
 $mvn spring-boot:run
 ```
-9. Listagens com dados de teste:
+
+7. Listagens com dados de teste:
 
 http://localhost:8082/promocity 
 
