@@ -40,7 +40,9 @@ public class Users extends AbstractModel<Long>{
 	private double latitude=0;
 	private double longitude=0;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonBackReference
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="users_coupon",
     joinColumns={@JoinColumn(name="users_id")},
     inverseJoinColumns={@JoinColumn(name="coupon_id")})

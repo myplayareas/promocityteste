@@ -7,11 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 public class MyTracking extends AbstractModel<Long>{
 	@OneToOne
 	private Users user;
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Track> trackingList = new LinkedList<Track>();
 
