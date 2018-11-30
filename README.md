@@ -16,12 +16,8 @@ TODO
 --- 
 
 * Gerar imagem de QRCode para um cupom
-* Serviços de CRUD de usuários
-* Serviços de CRUD de lojistas
 * Serviços de Controle de autenticação de usuários e lojistas
-* Serviços de CRUD de promoções
-* Serviços CRUD de cupons
-* Camanda de segurança
+* Camada de segurança
 
 Sobre as operações para execução da aplicação
 ---
@@ -56,17 +52,25 @@ http://localhost:8082/promocity
 
 mostra os seguintes recursos disponíveis
 
-"http://localhost:8082/promocity/users"
-"http://localhost:8082/promocity/users/{idUser}"
-"http://localhost:8082/promocity/users/{idUser}/coupons"
-"http://localhost:8082/promocity/users/{idUser}/location/{latitude}/{longitude}"
-"http://localhost:8082/promocity/stores"
-"http://localhost:8082/promocity/stores/{idStore}/promotions"
-"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}"
-"http://localhost:8082/promocity/stores/{idStore}/reportpromotions/{idPromotion}"
-"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons"
-"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons/{idCoupon}"
-"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/reportcoupons/{idCoupon}"
+"http://localhost:8082/promocity/users";
+"http://localhost:8082/promocity/users/{idUser}";
+"http://localhost:8082/promocity/users/{idUser}/coupons";
+"http://localhost:8082/promocity/users/{idUser}/monitoring/location/{latitude}/{longitude}";
+"http://localhost:8082/promocity/users/{email}/{senha}";
+"http://localhost:8082/promocity/users/{idUser}/add/friend/{idFriend}";
+"http://localhost:8082/promocity/users/{idUser}/list/friends";
+"http://localhost:8082/promocity/users/{idUser}/delete/friend/{idFriend}";
+"http://localhost:8082/promocity/users/{idUser}/activate/coupon/{idCoupon}/store/{idStore}/friends/{idFriend1}/{idFriend2}";
+"http://localhost:8082/promocity/users/{idUser}/list/tracks";	
+
+"http://localhost:8082/promocity/stores";
+"http://localhost:8082/promocity/stores/{idStore}/promotions";
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}";
+"http://localhost:8082/promocity/stores/{idStore}/reportpromotions/{idPromotion}";
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons";
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/coupons/{idCoupon}";
+"http://localhost:8082/promocity/stores/{idStore}/promotions/{idPromotion}/reportcoupons/{idCoupon}";
+"http://localhost:8082/promocity/stores//{idStore}/promotions/{idPromotion}/coupon/consume/{idCoupon}/users/{idUser}
 
 Referências
 ---
