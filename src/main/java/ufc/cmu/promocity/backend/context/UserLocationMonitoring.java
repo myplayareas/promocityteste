@@ -23,8 +23,7 @@ import ufc.cmu.promocity.backend.utils.geographic.GeographicArea;
  *
  */
 public class UserLocationMonitoring{
-	private PromotionArea promotionArea;
-	private CouponsSent couponsSent;
+	private PromotionArea promotionArea;	
 	private double radius=1;
 	private List<Long> idStoreList;
 	private List<Coupon> listaDeCuponsColetados = new LinkedList<Coupon>();
@@ -42,6 +41,7 @@ public class UserLocationMonitoring{
 		List<Store> listaDeLojasComPromocoesRegistradas = this.promotionArea.getStoreAreasRegistered();
 		//recupera os cupons das promocoes da loja
 		List<Coupon> listaCuponsDaPromocaoDaLojaCorrente = new LinkedList<Coupon>();
+		List<ReportCoupon> listaDeReportCupomColetadosAuxiliar = new LinkedList<ReportCoupon>();
 		
 		//1 Recebe a localização do usuário
 		
@@ -67,7 +67,8 @@ public class UserLocationMonitoring{
 							// Não tem cupom -> faz a coleta do cupom da loja
 							listaCuponsDaPromocaoDaLojaCorrente.add(cupomAuxiliar);
 							ReportCoupon cupomDetalhado = new ReportCoupon(loja, promocao, cupomAuxiliar);
-							this.listaDeReportCupomColetados.add(cupomDetalhado);
+							//this.listaDeReportCupomColetados.add(cupomDetalhado);
+							listaDeReportCupomColetadosAuxiliar.add(cupomDetalhado);
 						}						
 					}
 				}
@@ -77,7 +78,8 @@ public class UserLocationMonitoring{
 				continue;
 			}								
 		}				
-		this.setListaDeCuponsColetados(listaCuponsDaPromocaoDaLojaCorrente);				
+		this.setListaDeCuponsColetados(listaCuponsDaPromocaoDaLojaCorrente);		
+		this.setListaDeReportCupomColetados(listaDeReportCupomColetadosAuxiliar);
 	}
 	
    /**
