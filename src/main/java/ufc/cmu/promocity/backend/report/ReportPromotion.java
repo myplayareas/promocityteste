@@ -1,9 +1,13 @@
 package ufc.cmu.promocity.backend.report;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
+import ufc.cmu.promocity.backend.model.Coupon;
 import ufc.cmu.promocity.backend.model.Promotion;
 import ufc.cmu.promocity.backend.model.Store;
+import ufc.cmu.promocity.backend.model.Users;
 
 public class ReportPromotion {
 	private Promotion promotion;
@@ -16,6 +20,7 @@ public class ReportPromotion {
 	private String name;
 	private double latitude;
 	private double longitude;
+	private List<Long> idCoupons = new LinkedList<Long>();
 	
 	public ReportPromotion(Promotion promotion, Store store) {
 		this.promotion = promotion;
@@ -28,6 +33,13 @@ public class ReportPromotion {
 		this.name = store.getName();
 		this.latitude = store.getLatitude();
 		this.longitude = store.getLongitude();
+		
+		List<Coupon> coupons = new LinkedList<Coupon>();
+		coupons = promotion.getCoupons();
+		
+		for (Coupon coupon : coupons) {
+			this.idCoupons.add(coupon.getId());
+		}
 	}
 
 	public long getIdPromotion() {
@@ -92,6 +104,14 @@ public class ReportPromotion {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public List<Long> getIdCoupons() {
+		return idCoupons;
+	}
+
+	public void setIdCoupons(List<Long> idCoupons) {
+		this.idCoupons = idCoupons;
 	}
 	
 	

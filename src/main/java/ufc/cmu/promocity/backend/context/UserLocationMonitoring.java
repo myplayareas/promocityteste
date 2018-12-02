@@ -67,7 +67,6 @@ public class UserLocationMonitoring{
 							// Não tem cupom -> faz a coleta do cupom da loja
 							listaCuponsDaPromocaoDaLojaCorrente.add(cupomAuxiliar);
 							ReportCoupon cupomDetalhado = new ReportCoupon(loja, promocao, cupomAuxiliar);
-							//this.listaDeReportCupomColetados.add(cupomDetalhado);
 							listaDeReportCupomColetadosAuxiliar.add(cupomDetalhado);
 						}						
 					}

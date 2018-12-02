@@ -9,6 +9,7 @@ import ufc.cmu.promocity.backend.model.Store;
 import ufc.cmu.promocity.backend.model.Track;
 import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.report.ReportCoupon;
+import ufc.cmu.promocity.backend.report.ReportUser;
 import ufc.cmu.promocity.backend.service.CouponsService;
 import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.MyTrackingService;
@@ -118,6 +119,21 @@ public class UserController {
     public Users getUser(@PathParam("id") String id) {
     	return userService.get(Long.parseLong(id));
     }
+
+    /**
+     * Dado um id retorna o JSON com os dados básicos do usuario
+     * @param id
+     * @return código http
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/basic/{id}")
+    public ReportUser getBasicUser(@PathParam("id") String id) {
+    	Users user = userService.get(Long.parseLong(id));
+    	ReportUser basicUser = new ReportUser(user);
+    	return basicUser;
+    }
+
     
     /**
      * Dados os dados de um usuario adiciona um usuario no repositorio

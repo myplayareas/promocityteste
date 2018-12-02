@@ -24,6 +24,7 @@ import ufc.cmu.promocity.backend.model.Store;
 import ufc.cmu.promocity.backend.model.Users;
 import ufc.cmu.promocity.backend.report.ReportCoupon;
 import ufc.cmu.promocity.backend.report.ReportPromotion;
+import ufc.cmu.promocity.backend.report.ReportStore;
 import ufc.cmu.promocity.backend.service.CouponsService;
 import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.PromotionsService;
@@ -95,6 +96,21 @@ public class StoreController {
     public Store getStore(@PathParam("id") String id) {
     	return storeService.get(Long.parseLong(id));
     }
+
+    /**
+     * Dado um id de uma loja retorna em JSON dos dados básicos da loja
+     * @param id da loja
+     * @return dados básicos da loja
+     */
+    @GET
+    @Produces("application/json")
+    @Path("/basic/{id}")
+    public ReportStore getBasicStore(@PathParam("id") String id) {
+    	Store myStore = storeService.get(Long.parseLong(id));
+    	ReportStore basicStore = new ReportStore(myStore);
+    	return basicStore;
+    }
+
     
     /**
      * Dados os dados de uma loja faz seu registro no repositorio 

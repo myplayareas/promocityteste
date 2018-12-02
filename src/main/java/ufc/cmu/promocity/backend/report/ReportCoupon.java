@@ -22,6 +22,10 @@ public class ReportCoupon {
 	private String descriptionCoupon;
 	private String qrCode;
 	
+	public ReportCoupon() {
+		
+	}
+	
 	public ReportCoupon(Store store, Promotion promotion, Coupon coupon) {
 		this.promotion = promotion;
 		this.store = store;
