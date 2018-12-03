@@ -41,7 +41,7 @@ public class Users extends AbstractModel<Long>{
 	private double longitude=0;
 
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonBackReference
+	@JsonBackReference(value="user-coupons")
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="users_coupon",
     joinColumns={@JoinColumn(name="users_id")},
@@ -49,7 +49,7 @@ public class Users extends AbstractModel<Long>{
 	private List<Coupon> couponList = new LinkedList<Coupon>();
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonBackReference
+	@JsonBackReference(value="user-friend")
 	@ManyToMany(fetch = FetchType.LAZY)
  	private List<Users> idFriendsList = new LinkedList<Users>();
 		

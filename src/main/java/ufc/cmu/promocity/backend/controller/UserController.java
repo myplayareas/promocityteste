@@ -146,6 +146,9 @@ public class UserController {
      * Dados os dados de um usuario adiciona um usuario no repositorio
      * @param user
      * @return código http
+     * 
+     * curl -v --header "Content-Type: application/json" --request POST --data '{"username":"novousuario", "password":"novousuario"}' http://localhost:8082/promocity/users
+     * 
      */
     @POST
     @Produces("application/json")
