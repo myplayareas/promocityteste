@@ -154,9 +154,20 @@ public class UserController {
     @Produces("application/json")
     @Consumes("application/json")
     public Response addUser(Users user) {
-        userService.save(user);
-        URI uri = URI.create("/" + String.valueOf(user.getId()));
-		return Response.created(uri).build();
+    	
+    	String senhaCriptografada;
+    	
+    	if (user.getPassword().length() > 1){
+        	senhaCriptografada = new GeradorSenha().criptografa(user.getPassword());
+        	user.setPassword(senhaCriptografada);
+            userService.save(user);
+            URI uri = URI.create("/" + String.valueOf(user.getId()));
+            return Response.created(uri).build();
+    	}
+    	
+    	URI uri2 = URI.create("/"); 
+    	
+    	return Response.created(uri2).build();
     }
     
     /**
