@@ -27,7 +27,7 @@ public class UserLocationMonitoring{
 	private double radius=1;
 	private List<Long> idStoreList;
 	private List<Coupon> listaDeCuponsColetados = new LinkedList<Coupon>();
-	private List<ReportCoupon> listaDeReportCupomColetados = new LinkedList<>();
+	private List<Object> listaDeReportCupomColetados = new LinkedList<>();
 	
 	public UserLocationMonitoring(PromotionArea promotionArea) {
 		this.promotionArea = promotionArea;
@@ -41,7 +41,7 @@ public class UserLocationMonitoring{
 		List<Store> listaDeLojasComPromocoesRegistradas = this.promotionArea.getStoreAreasRegistered();
 		//recupera os cupons das promocoes da loja
 		List<Coupon> listaCuponsDaPromocaoDaLojaCorrente = new LinkedList<Coupon>();
-		List<ReportCoupon> listaDeReportCupomColetadosAuxiliar = new LinkedList<ReportCoupon>();
+		List<Object> listaDeReportCupomColetadosAuxiliar = new LinkedList<Object>();
 		
 		//1 Recebe a localização do usuário
 		
@@ -125,11 +125,11 @@ public class UserLocationMonitoring{
 		this.listaDeCuponsColetados = listaDeCuponsColetados;
 	}
 
-	public List<ReportCoupon> getListaDeReportCupomColetados() {
+	public List<Object> getListaDeReportCupomColetados() {
 		return listaDeReportCupomColetados;
 	}
 
-	public void setListaDeReportCupomColetados(List<ReportCoupon> listaDeReportCupomColetados) {
+	public void setListaDeReportCupomColetados(List<Object> listaDeReportCupomColetados) {
 		this.listaDeReportCupomColetados = listaDeReportCupomColetados;
 	}
 

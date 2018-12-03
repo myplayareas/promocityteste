@@ -13,6 +13,7 @@ import ufc.cmu.promocity.backend.report.ReportUser;
 import ufc.cmu.promocity.backend.service.CouponsService;
 import ufc.cmu.promocity.backend.service.MyStoresService;
 import ufc.cmu.promocity.backend.service.MyTrackingService;
+import ufc.cmu.promocity.backend.service.PromotionsService;
 import ufc.cmu.promocity.backend.service.StoreService;
 import ufc.cmu.promocity.backend.service.TrackService;
 import ufc.cmu.promocity.backend.service.UsersService;
@@ -57,6 +58,12 @@ public class UserController {
 	private CouponsService couponService;
 	private MyTrackingService myTrackingService;
 	private TrackService trackService;
+	private PromotionsService promotionService;
+	
+	@Autowired
+	public void setPromotionService(PromotionsService promotionServices){
+		this.promotionService = promotionServices;
+	}
 
 	@Autowired
 	public void setTrackService(TrackService trackService) {
@@ -180,11 +187,13 @@ public class UserController {
     @GET
     @Produces("application/json")
     @Path("{id}/monitoring/location/{latitude}/{longitude}")
-    public List<ReportCoupon> monitoringUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
+    public List<Object> monitoringUserLocation(@PathParam("id") String id, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude) {
     	List<Coupon> couponList = new LinkedList<Coupon>();
-    	List<ReportCoupon> cuponsDetalhados = new LinkedList<ReportCoupon>();
+    	List<Object> cuponsDetalhados = new LinkedList<Object>();
     	MyTracking myTrack = new MyTracking();
-    		
+    	List<Object> messageList = new LinkedList<Object>();
+    	Message message = new Message();
+    	
     	Users user = userService.get(Long.parseLong(id));
 		
 		myTrack.setUser(user);
@@ -220,7 +229,10 @@ public class UserController {
             return cuponsDetalhados;
         }
         else {
-        	return null;
+        	message.setId(100);
+        	message.setConteudo("Não existem cupons para serem coletados!");
+        	messageList.add(message);
+        	return messageList;
         }        
     }
 
@@ -247,8 +259,23 @@ public class UserController {
     @GET
     @Produces("application/json")
     @Path("/{id}/coupons")
-    public List<Coupon> getAllCouponsfromUser(@PathParam("id") String id) {
-        return userService.get(Long.parseLong(id)).getCouponList();
+    public List<ReportCoupon> getAllCouponsfromUser(@PathParam("id") String id) {
+    	List<Coupon> myCoupons = new LinkedList<Coupon>();    	    
+    	myCoupons = userService.get(Long.parseLong(id)).getCouponList(); 
+    	
+    	 List<ReportCoupon> listaCuponsDetalhados = new LinkedList<ReportCoupon>();
+    	 List<Store> myStores = storeService.getListAll();
+    	 
+    	 ReportCoupon cupomDetalhado = new ReportCoupon();
+    	 
+    	 for (Coupon cupom : myCoupons) {
+    		cupomDetalhado = getMyDetailsCoupons(cupom, myStores);
+			if (cupomDetalhado != null) {
+				listaCuponsDetalhados.add(cupomDetalhado);				
+			}
+    	 }
+   	   	
+        return listaCuponsDetalhados;
     }
 
     /**
@@ -509,4 +536,39 @@ public class UserController {
     	return valid;
     }        
     
+
+    /**
+     * Dado um cupom, procura esse cupon em todas as lojas e retorna um cupom detalhado com dados de loja e promocao do cupom
+     * @param myCoupon
+     * @param myStores
+     * @return
+     */
+    public ReportCoupon getMyDetailsCoupons(Coupon myCoupon, List<Store> myStores){
+    	ReportCoupon cupomDetalhado = new ReportCoupon();
+    	Promotion promocaoCupom = new Promotion();
+    	Store lojaCupom = new Store();
+    	
+    	boolean achouCupom = false;
+    	
+    	for (Store loja : myStores) {
+    		for (Promotion promocao : loja.getPromotionList()) {
+    			for (Coupon cupom : promocao.getCoupons()) {    				
+					if (cupom.getId() == myCoupon.getId()) {
+    					achouCupom = true;
+    					promocaoCupom = promocao;
+    					lojaCupom = loja;
+    					break;
+    				}
+    			}
+    			if (achouCupom) {
+    				break;
+    			}
+    		}
+    	}
+    	if (promocaoCupom != null && lojaCupom != null) {
+    		cupomDetalhado = new ReportCoupon(lojaCupom, promocaoCupom, myCoupon);
+    	}
+    	
+    	return cupomDetalhado;
+    }
 }
