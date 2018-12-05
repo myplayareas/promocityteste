@@ -19,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         .antMatchers("/promocity/coupons/**").permitAll()
         .antMatchers("/promocity/stores/**").permitAll()
         .antMatchers("/promocity/promotions/**").permitAll()
-        .antMatchers("/promocity/users/**").permitAll();              
+        .antMatchers("/promocity/users/**").permitAll()
+        .antMatchers("/index.html").permitAll();
     }
 }
