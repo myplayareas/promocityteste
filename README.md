@@ -16,6 +16,8 @@ Features
 * Envio de mensagem para usuário
 * Envio de cupom para usuário
 
+[![](https://codescene.io/projects/4278/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/4278/jobs/latest-successful/results)
+
 TODO
 --- 
 
