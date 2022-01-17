@@ -5,7 +5,7 @@ A aplicação móvel fica disponível em https://github.com/juarezmeneses/PromoC
 
 A aplicação web fica disponível em https://github.com/armandossrecife/syspromocity
 
-![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg) 
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://github.com/armandossrecife/promocity/blob/master/LICENSE) 
 
 Features
 ---
