@@ -20,13 +20,6 @@ Features
 
 [![](https://codescene.io/projects/4278/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/4278/jobs/latest-successful/results)
 
-TODO
---- 
-
-* Gerar imagem de QRCode para um cupom
-* Serviços de Controle de autenticação de usuários e lojistas
-* Camada de segurança
-
 Sobre as operações para execução da aplicação
 ---
 
